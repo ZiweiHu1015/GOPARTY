@@ -7,3 +7,7 @@ dependencies needed:
 3. yarn add sass
 4. yarn add eslint --dev
 5. yarn add react-router-dom
+
+when building slide component, you need to install infinite-react-carousel
+1. yarn add infinite-react-carousel 
+2. import slider on top of Slider.jsx file 
