@@ -1,5 +1,5 @@
 
-
+frontend:
 
 dependencies needed:
 1. git clone --single-branch -b  "react-mini" https://github.com/safak/youtube23.git .
@@ -11,3 +11,11 @@ dependencies needed:
 when building slide component, you need to install infinite-react-carousel
 1. yarn add infinite-react-carousel 
 2. import slider on top of Slider.jsx file 
+
+
+backend:
+
+1. under api folder, do npm init -y
+2. yarn add express nodemon
+
+
