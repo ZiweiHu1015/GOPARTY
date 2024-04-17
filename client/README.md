@@ -12,6 +12,9 @@ when building slide component, you need to install infinite-react-carousel
 1. yarn add infinite-react-carousel 
 2. import slider on top of Slider.jsx file 
 
+how to start the application: 
+1. yarn run dev
+
 
 backend:
 
