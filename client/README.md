@@ -20,5 +20,8 @@ backend:
 
 1. under api folder, do npm init -y
 2. yarn add express nodemon
+3. yarn add mongoose 
+4. yarn add dotenv
+
 
 
