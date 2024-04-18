@@ -22,6 +22,8 @@ backend:
 2. yarn add express nodemon
 3. yarn add mongoose 
 4. yarn add dotenv
+5. yarn add bcrypt
+6. yarn add jsonwebtoken cookie-parser
 
 
 
