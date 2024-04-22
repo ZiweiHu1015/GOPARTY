@@ -7,6 +7,7 @@ dependencies needed:
 3. yarn add sass
 4. yarn add eslint --dev
 5. yarn add react-router-dom
+6. yarn add moment
 
 when building slide component, you need to install infinite-react-carousel
 1. yarn add infinite-react-carousel 
@@ -14,6 +15,7 @@ when building slide component, you need to install infinite-react-carousel
 
 how to start the application: 
 1. yarn run dev
+
 
 
 backend:
@@ -24,6 +26,11 @@ backend:
 4. yarn add dotenv
 5. yarn add bcrypt
 6. yarn add jsonwebtoken cookie-parser
+7. yarn add react-use-navigate
+8. yarn add @tanstack/react-query
 
 
 
+To connect frontend and backend
+1. yarn add axios
+2. yarn add cors
