@@ -28,6 +28,8 @@ backend:
 6. yarn add jsonwebtoken cookie-parser
 7. yarn add react-use-navigate
 8. yarn add @tanstack/react-query
+9. yarn add stripe 
+10. yarn add @stripe/react-stripe-js @stripe/stripe-js
 
 
 

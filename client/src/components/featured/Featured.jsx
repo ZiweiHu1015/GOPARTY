@@ -1,45 +1,46 @@
-import React from 'react'
-import "./Featured.scss"
+import React, { useState } from "react";
+import "./Featured.scss";
+import { useNavigate } from "react-router-dom";
 
-const Featured = () => {
+function Featured() {
+  const [input, setInput] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    navigate(`/gigs?search=${input}`);
+  };
   return (
-    <div className = 'featured'>
-        <div className="container">
-            <div className="left">
-                <h1>
-                   Create <span>moments</span> with us. 
-                </h1>
-                <div className="search">
-                    <div className="searchInput">
-                    <img src="./img/search.png" alt="" />
-                    <input 
-                        type="text"  
-                        placeholder="Tell us what's in your mind"
-                    />
-                </div>
-                <button>Search</button>
+    <div className="featured">
+      <div className="container">
+        <div className="left">
+          <h1>
+            Find the perfect <span>freelance</span> services for your business
+          </h1>
+          <div className="search">
+            <div className="searchInput">
+              <img src="./img/search.png" alt="" />
+              <input
+                type="text"
+                placeholder='Try "building mobil app"'
+                onChange={(e) => setInput(e.target.value)}
+              />
             </div>
-            <div className="popular">
-                <span>Popular:</span>
-                <button>Web Design</button>
-                <button>birthday party</button>
-                <button>logo Design</button>
-                <button>AI service</button>
-            </div>
-            </div>
-
-
-            <div className="right"> 
-                <img src="./img/main.jpg" alt="" />
-            
-            
-            </div>
-
-       
- 
+            <button onClick={handleSubmit}>Search</button>
+          </div>
+          <div className="popular">
+            <span>Popular:</span>
+            <button>Web Design</button>
+            <button>WordPress</button>
+            <button>Logo Design</button>
+            <button>AI Services</button>
+          </div>
+        </div>
+        <div className="right">
+          <img src="./img/main.jpg" alt="" />
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Featured
+export default Featured;

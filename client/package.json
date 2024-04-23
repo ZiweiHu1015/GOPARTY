@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^2.7.0",
+    "@stripe/stripe-js": "^3.3.0",
     "@tanstack/react-query": "^5.29.2",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
