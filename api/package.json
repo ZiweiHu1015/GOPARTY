@@ -13,7 +13,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^2.7.0",
     "@stripe/stripe-js": "^3.3.0",
-    "@tanstack/react-query": "^5.29.2",
+    "@tanstack/react-query": "^5.32.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
