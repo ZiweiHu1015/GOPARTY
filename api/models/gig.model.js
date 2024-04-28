@@ -39,6 +39,10 @@ const GigSchema = new Schema(
       type: [String],
       required: false,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
     shortTitle: {
       type: String,
       required: true,
@@ -49,7 +53,7 @@ const GigSchema = new Schema(
     },
     deliveryTime: {
       type: Number,
-      required: true,
+      required: false,
     },
     revisionNumber: {
       type: Number,
