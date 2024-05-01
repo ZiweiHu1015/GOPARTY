@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Gig.scss";
 import { Slider } from "infinite-react-carousel/lib";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 
 
-
 function Gig() {
   const { id } = useParams();
+  const [personalizationText, setPersonalizationText] = useState("");
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["gig"],
@@ -26,13 +26,32 @@ function Gig() {
     error: errorUser,
     data: dataUser,
   } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["user", userId],
     queryFn: () =>
       newRequest.get(`/users/${userId}`).then((res) => {
         return res.data;
       }),
     enabled: !!userId,
   });
+
+  // save for order detail
+const handleConfirmOrder = () => {
+  const orderDetails = {
+    seller: dataUser.username,
+    sellerImg:dataUser.img,
+    title: data.title,
+    price: data.price,
+    image: data.images[0], // assuming the first image is what you want to display
+    personalization: personalizationText
+  };
+
+  localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
+  window.location.href = `/pay/${id}`; // Using window.location for redirection
+}
+
+
+
+
 
   return (
     <div className="gig">
@@ -44,7 +63,7 @@ function Gig() {
         <div className="container">
           <div className="left">
             <span className="breadcrumbs">
-              Fiverr {">"} Graphics & Design {">"}
+              GoParty {">"} Party Design {">"}
             </span>
             <h1>{data.title}</h1>
             {isLoadingUser ? (
@@ -76,7 +95,8 @@ function Gig() {
                 <img key={img} src={img} alt="" />
               ))}
             </Slider>
-            <h2>About This Gig</h2>
+
+            <h2>About This Listing</h2>
             <p>{data.desc}</p>
             {isLoadingUser ? (
               "loading"
@@ -107,10 +127,6 @@ function Gig() {
                 <div className="box">
                   <div className="items">
                     <div className="item">
-                      <span className="title">From</span>
-                      <span className="desc">{dataUser.country}</span>
-                    </div>
-                    <div className="item">
                       <span className="title">Member since</span>
                       <span className="desc">Aug 2022</span>
                     </div>
@@ -119,12 +135,16 @@ function Gig() {
                       <span className="desc">4 hours</span>
                     </div>
                     <div className="item">
-                      <span className="title">Last delivery</span>
-                      <span className="desc">1 day</span>
+                      <span className="title">Area of service</span>
+                      <span className="desc">Greater Boston Area</span>
                     </div>
                     <div className="item">
                       <span className="title">Languages</span>
-                      <span className="desc">English</span>
+                      <span className="desc">English, Spanish</span>
+                    </div>
+                    <div className="item">
+                      <span className="title">Specialize in</span>
+                      <span className="desc">Floral</span>
                     </div>
                   </div>
                   <hr />
@@ -135,21 +155,28 @@ function Gig() {
           <Reviews gigId={id} />
           </div>
           <div className="right">
+           
             <div className="price">
-              <h3>{data.shortTitle}</h3>
+              <h3>{data.title}</h3>
               <h2>$ {data.price}</h2>
             </div>
-            <p>{data.shortDesc}</p>
-            <div className="details">
-              <div className="item">
-                <img src="/img/clock.png" alt="" />
-                <span>{data.deliveryDate} Days Delivery</span>
-              </div>
-              <div className="item">
-                <img src="/img/recycle.png" alt="" />
-                <span>{data.revisionNumber} Revisions</span>
-              </div>
-            </div>
+
+
+            <span> Color: {data.color}</span>
+            <span>Size: {data.size}</span>
+            <span>Avaiable Dates: {data.deliveryDate}</span>
+            <span>Delivery Type: {data.deliveryType}</span>
+
+            <label htmlFor="personalizationInput">Add personalization for your order:</label>
+              <input
+                  type="text"
+                  className="personalizationInput"
+                  id="personalizationInput"
+                  value={personalizationText}
+                  onChange={(e) => setPersonalizationText(e.target.value)}
+                  placeholder="Type any specific details here..."
+              />
+
             <div className="features">
               {data.features.map((feature) => (
                 <div className="item" key={feature}>
@@ -158,8 +185,13 @@ function Gig() {
                 </div>
               ))}
             </div>
+
+            <div className="personalization">
+             
+            </div>
+
             <Link to={`/pay/${id}`}>
-            <button>Continue</button>
+            <button onClick={handleConfirmOrder}>Confirm Order</button>
             </Link>
           </div>
         </div>

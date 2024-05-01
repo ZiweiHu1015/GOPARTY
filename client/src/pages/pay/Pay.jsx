@@ -6,15 +6,16 @@ import newRequest from "../../utils/newRequest";
 import { useParams } from "react-router-dom";
 import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
 
+
 const stripePromise = loadStripe(
-    "pk_live_51P8QNZP3GPew7dFvO7ekxkgWMyHWSa2YIHHtvWdZgOgqhgGs3hYIRIAs1l9zLeIdxCWD9Vgt25Cum0Ir5NVPd1y400s0KQog8b"
+    "pk_test_51P8QNZP3GPew7dFvznMAM3anMgCKu624BND36TD9MOd6md9lXUtJ77DgBL2qN05aQQEp5DYPN0vw7KjC5kE2eUch00AY9mjIpV"
   );
-  
+
 
 const Pay = () => {
-    const [clientSecret, setClientSecret] = useState("");
-
     const { id } = useParams();
+    const [clientSecret, setClientSecret] = useState("");
+    const [orderDetails, setOrderDetails] = useState({});
 
     useEffect(() => {
         const makeRequest = async () => {
@@ -28,7 +29,12 @@ const Pay = () => {
           }
         };
         makeRequest();
-      }, []);
+         // Retrieve order details from localStorage
+         const storedDetails = localStorage.getItem('orderDetails');
+         if (storedDetails) {
+           setOrderDetails(JSON.parse(storedDetails));
+         }
+     }, [id]);
 
       const appearance = {
         theme: 'stripe',
@@ -39,13 +45,49 @@ const Pay = () => {
       };
     
       return <div className="pay">
-        {clientSecret && (
-            <Elements options={options} stripe={stripePromise}>
-              <CheckoutForm />
-            </Elements>
-          )}
-      </div>;
+        <div className = "checkout" >
+          <div className = "container" >
+              <div className="left">
+              
+              <div className="orderCard">
+              <div className="orderCardHeader">
+                  <img src={orderDetails.sellerImg || "/img/userProfile.jpg"} alt="Seller" className="sellerImg" />
+                  <div className="sellerName">{orderDetails.seller}</div>
+                  <div className = "contactSeller"> Contact Seller</div>
+                </div>
+                  {orderDetails.image && (
+                    <div className="orderCardTop">
+                      
+                      <img src={orderDetails.image} alt={orderDetails.title} className="orderImage" />
+                      <div className="orderDetails">
+                        <h3>Title: {orderDetails.title}</h3>
+                        <p>Color: {orderDetails.color}</p>
+                        <p>Personalization: {orderDetails.personalization}</p>
+                        {/* Include other details like size etc. */}
+                      </div>
+                      <div className="orderPrice">
+                        <p><strong>${orderDetails.price}</strong></p>
+                      </div>
+                    </div>
+                  )}
+                  {/* Include quantity dropdown, Edit, Save, Remove options below */}
+              </div>
+            
+            
+            </div>
+
+            <div className = "right">
+              <div className = "payment">
+                {clientSecret && (
+                    <Elements options={options} stripe={stripePromise}>
+                      <CheckoutForm />
+                    </Elements>
+                  )}
+            </div>
+          </div>
+      </div>
+      </div>
+    </div>
     };
     
     export default Pay;
-    

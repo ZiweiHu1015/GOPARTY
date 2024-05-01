@@ -88,14 +88,30 @@
           }
         }
       }
-  
-      //   &.reverse {
-      //     background-color: #0d084d;
-      //     color: white;
-      //     .container {
-      //       flex-direction: row-reverse;
-      //     }
-      //   }
+    }
+    .packages{
+      display: flex;
+      justify-content: center;
+      padding: 100px 0px;
+      .container{
+        width: 1400px;
+       
+        h1{
+          text-align: center;
+          color: green;
+          font-family: Sedan;
+          font-size: px;
+        }
+        h2{
+          text-align: center;
+          color: #555;
+          
+        }
+
+
+      }
+
+
     }
   
     .explore {

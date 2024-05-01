@@ -13,8 +13,14 @@ const Messages = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["conversations"],
     queryFn: () =>
-      newRequest.get(`/conversations`).then((res) => {
-        return res.data;
+      newRequest.get('/conversations').then(async (res) => {
+        const conversations = res.data;
+        await Promise.all(conversations.map(async (conversation) => {
+          const otherUserId = currentUser.isSeller ? conversation.buyerId : conversation.sellerId;
+          const userDetails = await newRequest.get(`/users/${otherUserId}`); // Fetch each user's details
+          conversation.otherUser = userDetails.data; // Assuming `data` holds the necessary user details
+        }));
+        return conversations;
       }),
   });
 
@@ -51,18 +57,23 @@ const Messages = () => {
             </tr>
             {data.map((c) => (
               <tr
-                className={
-                  ((currentUser.isSeller && !c.readBySeller) ||
-                    (!currentUser.isSeller && !c.readByBuyer)) &&
-                  "active"
-                }
-                key={c.id}
-              >
+              className={
+                (currentUser.isSeller && !c.readBySeller) ||
+                (!currentUser.isSeller && !c.readByBuyer)
+                  ? 'active'
+                  : undefined // This ensures that the className is not set to a boolean
+              }
+              key={c.id}
+            >
                 <td>{currentUser.isSeller ? c.buyerId : c.sellerId}</td>
                 <td>
-                  <Link to={`/message/${c.id}`} className="link">
-                    {c?.lastMessage?.substring(0, 100)}...
-                  </Link>
+                <Link 
+                  to={`/message/${c.id}`} 
+                  className="link"
+                  state={{ otherUser: c.otherUser }} // Pass the entire user object
+                >
+                  {c?.lastMessage?.substring(0, 100)}...
+                </Link>
                 </td>
                 <td>{moment(c.updatedAt).fromNow()}</td>
                 <td>

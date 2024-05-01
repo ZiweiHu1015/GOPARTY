@@ -2,6 +2,11 @@
   display: flex;
   justify-content: center;
 
+  .error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+  }
   .container {
     width: 1400px;
     padding: 50px 0px;
@@ -77,8 +82,8 @@
             font-size: 12px;
             font-weight: 400;
             background: transparent;
-            color: red;
-            border: 1px solid red;
+            color: green;
+            border: 1px solid green;
             display: flex;
             align-items: center;
             gap: 20px;

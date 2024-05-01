@@ -9,10 +9,14 @@ import { useLocation } from "react-router-dom";
 const Gigs = () => {
     const [sort, setSort] = useState("sales");
     const [open, setOpen] = useState(false);
+    const {search} = useLocation();
+    const queryParams = new URLSearchParams(search);
+    const category = queryParams.get("cat");
+  
+  
+
     const minRef = useRef();
     const maxRef = useRef();
-
-    const {search} = useLocation();
 
     const { isLoading, error, data, refetch } = useQuery({
       queryKey: ["gigs"],
@@ -25,8 +29,8 @@ const Gigs = () => {
             return res.data;
           }),
     });
-  
-    console.log(data);
+
+   // console.log(data);
 
     const reSort = (type) =>{
         setSort(type)
@@ -44,10 +48,10 @@ const Gigs = () => {
   return (
     <div className = 'gigs'>
       <div className = "container">
-        <span className = "breadcrumbs"> GoParty  Graphics & Design</span>
-        <h1>AI Artists</h1>
+        <span className = "breadcrumbs"> GoParty {">"} {category}</span>
+        <h1>Party Experts</h1>
         <p>
-          Explore the boundaries of art and technology with Liverr's AI artists
+          Explore party experts 
         </p>
         <div className="menu">
           <div className="left">

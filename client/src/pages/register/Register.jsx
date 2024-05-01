@@ -4,7 +4,6 @@ import "./Register.scss";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
 
-
 function Register() {
   const [file, setFile] = useState(null);
   const [user, setUser] = useState({
@@ -15,6 +14,7 @@ function Register() {
     country: "",
     isSeller: false,
     desc: "",
+    phone: "",  // Ensure you have phone in your initial state if you're using it in the form.
   });
 
   const navigate = useNavigate();
@@ -30,9 +30,9 @@ function Register() {
       return { ...prev, isSeller: e.target.checked };
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const url = await upload(file);
     try {
       await newRequest.post("/auth/register", {
@@ -44,34 +44,39 @@ function Register() {
       console.log(err);
     }
   };
+
   return (
     <div className="register">
       <form onSubmit={handleSubmit}>
         <div className="left">
           <h1>Create a new account</h1>
-          <label htmlFor="">Username</label>
+          <label>Username</label>
           <input
             name="username"
             type="text"
-            placeholder="johndoe"
+            placeholder="Emma"
             onChange={handleChange}
           />
-          <label htmlFor="">Email</label>
+          <label>Email</label>
           <input
             name="email"
             type="email"
-            placeholder="email"
+            placeholder="email@example.com"
             onChange={handleChange}
           />
-          <label htmlFor="">Password</label>
-          <input name="password" type="password" onChange={handleChange} />
-          <label htmlFor="">Profile Picture</label>
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-          <label htmlFor="">Country</label>
+          <label>Password</label>
           <input
-            name="country"
+            name="password"
+            type="password"
+            onChange={handleChange}
+          />
+          <label>Profile Picture</label>
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <label>Location</label>
+          <input
+            name="state"
             type="text"
-            placeholder="Usa"
+            placeholder="Cambridge,MA"
             onChange={handleChange}
           />
           <button type="submit">Register</button>
@@ -79,24 +84,23 @@ function Register() {
         <div className="right">
           <h1>I want to become a seller</h1>
           <div className="toggle">
-            <label htmlFor="">Activate the seller account</label>
+            <label>Activate the seller account</label>
             <label className="switch">
               <input type="checkbox" onChange={handleSeller} />
               <span className="slider round"></span>
             </label>
           </div>
-          <label htmlFor="">Phone Number</label>
+          <label>Phone Number</label>
           <input
             name="phone"
             type="text"
-            placeholder="+1 234 567 89"
+            placeholder="+1 234 567 8900"
             onChange={handleChange}
           />
-          <label htmlFor="">Description</label>
+          <label>{user.isSeller ? "Service Description" : "Description"}</label>
           <textarea
-            placeholder="A short description of yourself"
+            placeholder={user.isSeller ? "What services do you provide, and in what locations?" : "A short description of yourself."}
             name="desc"
-            id=""
             cols="30"
             rows="10"
             onChange={handleChange}

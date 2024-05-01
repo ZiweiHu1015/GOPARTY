@@ -1,7 +1,6 @@
 import React from "react";
 import "./Home.scss";
 import Featured from "../../components/featured/Featured";
-import TrustedBy from "../../components/trustedBy/TrustedBy";
 import Slide from "../../components/slide/Slide";
 import CatCard from "../../components/catCard/CatCard";
 import ProjectCard from "../../components/projectCard/ProjectCard";
@@ -12,16 +11,28 @@ const Home = () => {
   return (
     <div className = 'home'>
         <Featured/>
-        <TrustedBy/>
+       {/* <TrustedBy/> */}
+       <div className ="packages">
+       <div className="container">
+        <div className = "item">
+        <h2>Shop Our </h2>
+        <h1>Most Picked Items</h1>
         <Slide slidesToShow={5} arrowsScroll={4}>
             {cards.map((card) => (
-            <CatCard key={card.id} card={card} />
+              <div key={card.id} >
+                  <CatCard key={card.id} card={card} />
+              </div>
+            
             ))}
         </Slide>
+        </div>
+        </div>
+        </div>
+
         <div className="features">
         <div className="container">
           <div className="item">
-            <h1>A whole world of freelance talent at your fingertips</h1>
+            <h1>Manage your party at your fingertips</h1>
             <div className="title">
               <img src="./img/check.png" alt="" />
               The best for every budget
@@ -34,11 +45,11 @@ const Home = () => {
               Worry-free process
             </div>
             <p>
-              Find the right person to create your moment within minutes.
+              Find the right person to create your vision within minutes.
             </p>
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Protected payments, every time
+              Protected payments, every time.
             </div>
             <p>
               Always know what you'll pay upfront. Your payment isn't released
@@ -53,10 +64,12 @@ const Home = () => {
             </p>
           </div>
           <div className="item">
-            <video src="./img/video.mp4" controls />
+            <img src="./img/placeholder2.jpg" />
           </div>
       </div>
       </div>
+
+      {/*
       <div className="explore">
         <div className="container">
           <h1>Explore the marketplace</h1>
@@ -145,14 +158,18 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+    */}
+
+{/* 
       <div className="features dark">
         <div className="container">
           <div className="item">
             <h1>
-              fiverr <i>business</i>
+              GoParty <i>business</i>
             </h1>
             <h1>
-              A business solution designed for <i>teams</i>
+              A event platform designed for <i>Coporate Events</i>
             </h1>
             <p>
               Upgrade to a curated experience packed with tools and benefits,
@@ -160,19 +177,19 @@ const Home = () => {
             </p>
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Connect to freelancers with proven business experience
+              Connect to event planner with proven business experience
             </div>
 
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Get matched with the perfect talent by a customer success manager
+              Get matched with the perfect vendo by a customer success manager
             </div>
 
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Manage teamwork and boost productivity with one powerful workspace
+              Manage the event with one powerful workspace
             </div>
-            <button>Explore Fiverr Business</button>
+            <button>Explore GoParty Business</button>
           </div>
           <div className="item">
             <img
@@ -182,11 +199,16 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+           
+
+
       <Slide slidesToShow={4} arrowsScroll={4}>
         {projects.map((card) => (
           <ProjectCard key={card.id} card={card} />
         ))}
       </Slide>
+       */}
     </div>
   );
 }

@@ -39,14 +39,10 @@ function Navbar() {
       <div className="container">
         <div className="logo">
           <Link className="link" to="/">
-            <span className="text">fiverr</span>
+            <span className="text">GoParty</span>
           </Link>
-          <span className="dot">.</span>
         </div>
         <div className="links">
-          <span>Fiverr Business</span>
-          <span>Explore</span>
-          <span>English</span>
           {!currentUser?.isSeller && <span>Become a Seller</span>}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
@@ -91,31 +87,25 @@ function Navbar() {
           <hr />
           <div className="menu">
             <Link className="link menuLink" to="/">
-              Graphics & Design
+              Wedding
             </Link>
             <Link className="link menuLink" to="/">
-              Video & Animation
+              Engagement
             </Link>
             <Link className="link menuLink" to="/">
-              Writing & Translation
+              Birthday
             </Link>
             <Link className="link menuLink" to="/">
-              AI Services
+              Anniversary
             </Link>
             <Link className="link menuLink" to="/">
-              Digital Marketing
+              Bachelor party
             </Link>
             <Link className="link menuLink" to="/">
-              Music & Audio
+              Baby Shower
             </Link>
             <Link className="link menuLink" to="/">
-              Programming & Tech
-            </Link>
-            <Link className="link menuLink" to="/">
-              Business
-            </Link>
-            <Link className="link menuLink" to="/">
-              Lifestyle
+              Opening ceremony
             </Link>
           </div>
           <hr />
