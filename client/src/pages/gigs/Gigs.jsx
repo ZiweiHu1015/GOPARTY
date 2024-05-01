@@ -13,10 +13,11 @@ const Gigs = () => {
     const queryParams = new URLSearchParams(search);
     const category = queryParams.get("cat");
   
-  
-
     const minRef = useRef();
     const maxRef = useRef();
+
+    // Construct the query for the API based on current filters
+    const queryString = `${search}&min=${minRef.current?.value}&max=${maxRef.current?.value}&sort=${sort}`;
 
     const { isLoading, error, data, refetch } = useQuery({
       queryKey: ["gigs"],
@@ -37,13 +38,15 @@ const Gigs = () => {
         setOpen(false)
     }
     
+   // Trigger refetch on parameter changes
     useEffect(() => {
-      refetch();
-    }, [sort]);
-  
+        refetch();
+    }, [sort, category, minRef.current?.value, maxRef.current?.value]);
+
     const apply = () => {
-      refetch();
+        refetch();
     };
+
 
   return (
     <div className = 'gigs'>

@@ -34,6 +34,11 @@ function Navbar() {
     }
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
       <div className="container">
@@ -83,30 +88,24 @@ function Navbar() {
         </div>
       </div>
       {(active || pathname !== "/") && (
-        <>
+       <>
           <hr />
           <div className="menu">
-            <Link className="link menuLink" to="/">
-              Wedding
-            </Link>
-            <Link className="link menuLink" to="/">
-              Engagement
-            </Link>
-            <Link className="link menuLink" to="/">
-              Birthday
-            </Link>
-            <Link className="link menuLink" to="/">
-              Anniversary
-            </Link>
-            <Link className="link menuLink" to="/">
-              Bachelor party
-            </Link>
-            <Link className="link menuLink" to="/">
-              Baby Shower
-            </Link>
-            <Link className="link menuLink" to="/">
-              Opening ceremony
-            </Link>
+            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=balloon")}>
+              Balloon Art
+            </span>
+            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=floral")}>
+              Floral
+            </span>
+            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=cake")}>
+              Cake
+            </span>
+            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=package")}>
+              Packages
+            </span>
+            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=grabandgo")}>
+              Grab and Go
+            </span>
           </div>
           <hr />
         </>
