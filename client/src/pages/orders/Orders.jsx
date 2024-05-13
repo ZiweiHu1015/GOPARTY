@@ -3,17 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Orders.scss";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
+import OrderCard from "../../components/orderCard/OrderCard.jsx";
 
 const Orders = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-
   const navigate = useNavigate();
-
+  
   const { isLoading, error, data } = useQuery({
     queryKey: ["orders"],
     queryFn: () =>
       newRequest.get(`/orders`).then((res) => {
+        console.log("Orders:", res.data);
         return res.data;
       }),
   });
@@ -35,6 +35,7 @@ const Orders = () => {
       }
     }
   };
+
   return (
     <div className="orders">
       {isLoading ? (
@@ -43,36 +44,21 @@ const Orders = () => {
         "error"
       ) : (
         <div className="container">
-          <div className="title">
-            <h1>Orders</h1>
-          </div>
-          <table>
-            <tr>
-              <th>Image</th>
-              <th>Title</th>
-              <th>Price</th>
-              <th>Contact</th>
-            </tr>
-            {data.map((order) => (
-              <tr key={order._id}>
-                <td>
-                  <img className="image" src={order.img} alt="" />
-                </td>
-                <td>{order.title}</td>
-                <td>{order.price}</td>
-                <td>
-                  <img
-                    className="message"
-                    src="./img/message.png"
-                    alt=""
-                    onClick={() => handleContact(order)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </table>
+          
+        <h1>Orders</h1>
+       
+        {data.map(order => (
+          <OrderCard key={order._id} order={order} onContact={handleContact} />
+        ))}
+
+
         </div>
-      )}
+
+
+  
+    )}
+
+
     </div>
   );
 };

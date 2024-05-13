@@ -53,7 +53,8 @@ const Message = () => {
             {data.map((m) => (
               <div className={m.userId === currentUser._id ? "owner item" : "item"} key={m._id}>
                 <img
-                  src={m.userId === currentUser._id ? currentUser.img : otherUser.img}
+                  src={m.userId === currentUser._id ?  (currentUser.img || '../img/placeholder.jpg') : 
+                  (otherUser.img || '../img/placeholder.jpg')}
                   alt={m.userId === currentUser._id ? "You" : "Other User"}
                 />
                 <p>{m.desc}</p>

@@ -35,8 +35,7 @@
           font-weight: bold;
           font-family: "Courgette", cursive;
     
-          .text {
-          }
+         
     
 
         }
@@ -86,16 +85,17 @@
 
            
             button {
-                color: white;
+                color: #A8D1D1;
                 padding: 10px 20px;
                 border-radius: 5px;
-                border: 1px solid white;
+                border: 1px solid #A8D1D1;
                 background-color: transparent;
                 cursor: pointer;
 
                 &:hover {
-                    background-color: #1dbf73;
-                    border-color: #1dbf73;
+                    color:white;
+                    background-color: #A8D1D1;
+                    border-color: #A8D1D1;
                   }
             }
         }

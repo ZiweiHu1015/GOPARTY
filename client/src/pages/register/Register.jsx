@@ -9,7 +9,7 @@ function Register() {
   const [user, setUser] = useState({
     username: "",
     email: "",
-    password: "",
+    password: "",  // Add this line for confirm password
     img: "",
     country: "",
     isSeller: false,
@@ -30,9 +30,9 @@ function Register() {
       return { ...prev, isSeller: e.target.checked };
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const url = await upload(file);
     try {
       await newRequest.post("/auth/register", {
@@ -47,9 +47,19 @@ function Register() {
 
   return (
     <div className="register">
+     <div className = "header">
+     <h1>Create a new account</h1>
+          <div className="toggle">
+            <label>Activate the seller account</label>
+            <label className="switch">
+              <input type="checkbox" onChange={handleSeller} />
+              <span className="slider round"></span>
+            </label>
+          </div>
+       </div>
+
       <form onSubmit={handleSubmit}>
         <div className="left">
-          <h1>Create a new account</h1>
           <label>Username</label>
           <input
             name="username"
@@ -68,43 +78,18 @@ function Register() {
           <input
             name="password"
             type="password"
+            placeholder="password"
             onChange={handleChange}
           />
-          <label>Profile Picture</label>
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-          <label>Location</label>
+          <label>Confirm Password</label>
           <input
-            name="state"
-            type="text"
-            placeholder="Cambridge,MA"
+            name="confirm_password"
+            type="password"
+            placeholder="Confirm your password"
             onChange={handleChange}
           />
+      
           <button type="submit">Register</button>
-        </div>
-        <div className="right">
-          <h1>I want to become a seller</h1>
-          <div className="toggle">
-            <label>Activate the seller account</label>
-            <label className="switch">
-              <input type="checkbox" onChange={handleSeller} />
-              <span className="slider round"></span>
-            </label>
-          </div>
-          <label>Phone Number</label>
-          <input
-            name="phone"
-            type="text"
-            placeholder="+1 234 567 8900"
-            onChange={handleChange}
-          />
-          <label>{user.isSeller ? "Service Description" : "Description"}</label>
-          <textarea
-            placeholder={user.isSeller ? "What services do you provide, and in what locations?" : "A short description of yourself."}
-            name="desc"
-            cols="30"
-            rows="10"
-            onChange={handleChange}
-          ></textarea>
         </div>
       </form>
     </div>
@@ -112,3 +97,4 @@ function Register() {
 }
 
 export default Register;
+
