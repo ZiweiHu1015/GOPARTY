@@ -23,9 +23,9 @@ export default mongoose.model("User", userSchema)*/
 import db from '../database.js'; // Import your database connection
 
 export const createUser = async (userData) => {
-    const { username, email, password } = userData;
-    const sql = `INSERT INTO Users (username, email, password) VALUES (?, ?, ?)`;
-    const [result] = await db.execute(sql, [username, email, password]);
+    const { username, email, password, isSeller } = userData;
+    const sql = `INSERT INTO Users (username, email, password, isSeller) VALUES (?, ?, ?, ?)`;
+    const [result] = await db.execute(sql, [username, email, password, isSeller]);
     return result.insertId;
 };
 
