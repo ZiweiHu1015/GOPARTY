@@ -71,18 +71,37 @@ export const updateListingById = async (listingId, updates) => {
 };
 
 export const getListingsBySellerId = async (sellerId) => {
-    const sql = `
-        SELECT L.* 
-        FROM Listings L
-        JOIN Users U ON L.UserId = U.UserID
-        WHERE U.UserID = ? AND U.isSeller = TRUE
-    `;
-    const [rows] = await db.query(sql, [sellerId]);
-    return rows;
+    try {
+        const sql = `
+            SELECT L.* 
+            FROM Listings L
+            JOIN Users U ON L.SellerID = U.UserID
+            WHERE U.UserID = ? AND U.isSeller = TRUE
+        `;
+        const [rows] = await db.query(sql, [sellerId]);
+        return rows;
+    } catch (error) {
+        throw error;
+    }
 };
+
 
 export const getListingsByCategory = async (category) => {
     const sql = `SELECT * FROM Listings WHERE Category = ?`;
     const [rows] = await db.query(sql, [category]);
     return rows;
+};
+
+export const getAllListings = async () => {
+    try {
+        const sql = `
+            SELECT * 
+            FROM Listings
+        `;
+        const [rows] = await db.query(sql);
+        return rows;
+    } catch (error) {
+        console.error("Error querying the database in getAllListings:", error); // Log the error details
+        throw error;
+    }
 };

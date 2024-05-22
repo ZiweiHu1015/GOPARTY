@@ -4,7 +4,8 @@ import {
     deleteListingById,
     updateListingById,
     getListingsBySellerId,
-    getListingsByCategory
+    getListingsByCategory,
+    getAllListings
   } from '../models/listing.model.js';
   import createError from '../utils/createError.js';
   
@@ -33,14 +34,15 @@ import {
 };
 
   
-  export const deleteListing = async (req, res, next) => {//untested
+  export const deleteListing = async (req, res, next) => {
     try {
       const listing = await getListingById(req.params.id);
       if (!listing) {
         return next(createError(404, "Listing not found"));
       }
   
-      if (listing.userId !== req.userId) {
+      if (listing.SellerID !== req.userId) {
+        console.log("databse.userid: ", listing.UserID + "user.userid:",req.userId );
         return next(createError(403, "You can delete only your listing!"));
       }
   
@@ -51,7 +53,7 @@ import {
     }
   };
   
-  export const getListing = async (req, res, next) => {//untested
+  export const getListing = async (req, res, next) => {
     try {
       const listing = await getListingById(req.params.id);
       if (!listing) {
@@ -60,7 +62,7 @@ import {
       res.status(200).send(listing);
     } catch (error) {
       next(createError(500, "Server error while retrieving listing"));
-    }
+    } 
   };
   
   export const getListings = async (req, res, next) => {//untested
@@ -68,6 +70,7 @@ import {
       let listings;
       if (req.query.userId) {
         listings = await getListingsBySellerId(req.query.userId);
+
       } else if (req.query.cat) {
         listings = await getListingsByCategory(req.query.cat);
       } else {

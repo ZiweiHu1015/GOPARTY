@@ -4,6 +4,7 @@ import "./Register.scss";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
 
+
 function Register() {
   const [file, setFile] = useState(null);
   const [user, setUser] = useState({
