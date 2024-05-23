@@ -1,37 +1,45 @@
 import createError from "../utils/createError.js";
-import Message from "../models/message.model.js";
-import Conversation from "../models/conversation.model.js";
+import {
+  createMessage as modelCreateMessage,
+  getMessagesByConversationId as modelGetMessageByConversationId,
+  updateConversation as modelUpdateConversation
+} from "../models/message.model.js";
 
 export const createMessage = async (req, res, next) => {
-  const newMessage = new Message({
-    conversationId: req.body.conversationId,
-    userId: req.userId,
-    desc: req.body.desc,
-  });
-  try {
-    const savedMessage = await newMessage.save();
-    await Conversation.findOneAndUpdate(
-      { id: req.body.conversationId },
-      {
-        $set: {
-          readBySeller: req.isSeller,
-          readByBuyer: !req.isSeller,
-          lastMessage: req.body.desc,
-        },
-      },
-      { new: true }
-    );
+  const { conversationId, desc } = req.body;
+  const userId = req.userId;
 
-    res.status(201).send(savedMessage);
+  try {
+    let conversation = await modelGetConversationById(conversationId);
+
+    if (!conversation) {
+      await modelCreateMessage(conversationId, userId); // Adjust this function to create conversation correctly
+      conversation = await modelGetConversationById(conversationId); // Optionally re-fetch
+    }
+
+    const messageData = {
+      conversationId,
+      userId,
+      desc
+    };
+
+    console.log("Controller: Creating message with data:", messageData);
+    const messageId = await modelCreateMessage(messageData);
+    console.log("Controller: Message created with ID:", messageId);
+
+    res.status(201).send({ messageId, message: desc });
   } catch (err) {
-    next(err);
+    console.error("Controller: Error creating message:", err);
+    next(createError(500, "Server error while creating message"));
   }
 };
+
+
 export const getMessages = async (req, res, next) => {
   try {
-    const messages = await Message.find({ conversationId: req.params.id });
+    const messages = await modelGetMessageByConversationId(req.params.id);
     res.status(200).send(messages);
   } catch (err) {
-    next(err);
+    next(createError(500, "Server error while retrieving messages"));
   }
 };

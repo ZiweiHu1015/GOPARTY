@@ -1,4 +1,4 @@
-import Gig from "../models/gig.model.js";
+/*import Gig from "../models/gig.model.js";
 import createError from "../utils/createError.js";
 
 export const createGig = async (req, res, next) => {
@@ -58,3 +58,4 @@ export const getGigs = async (req, res, next) => {
     next(err);
   }
 };
+*/
