@@ -2,14 +2,39 @@ import db from '../database.js'; // Ensure this points to your configured MySQL 
 
 // Function to create a review with correct parameter mapping
 export const createReview = async (reviewData) => {
-    const { buyerId, productId, sellerId, rating, comment, images } = reviewData;
-    const sql = `
-        INSERT INTO Reviews (ProductID, SellerID, BuyerID, Rating, Comment, Images, Timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, NOW())
-    `;
-    const [result] = await db.execute(sql, [productId, sellerId, buyerId, rating, comment, images]);
-    return result.insertId;
+  const {
+      buyerId,
+      productId,
+      sellerId,
+      rating,
+      comment,
+      images = null  // Default to null if not provided
+  } = reviewData;
+
+  // Check for undefined and set to null if necessary
+  const parameters = [
+      productId, 
+      sellerId, 
+      buyerId , 
+      rating , 
+      comment, 
+      images
+  ];
+
+  const sql = `
+      INSERT INTO Reviews (ProductID, SellerID, BuyerID, Rating, Comment, Images, Timestamp)
+      VALUES (?, ?, ?, ?, ?, ?, NOW())
+  `;
+
+  try {
+      const [result] = await db.execute(sql, parameters);
+      return result.insertId;
+  } catch (error) {
+      console.error('Failed to create review: ' + error.message);
+      throw new Error('Failed to create review: ' + error.message);
+  }
 };
+
 
 // Function to find a review by product and user
 export const findReviewByProductAndUser = async (buyerId, productId) => {

@@ -45,10 +45,6 @@ export const createListing = async (listingData) => {
     return result.insertId;
 };
 
-
-
-
-
 export const getListingById = async (listingId) => {
     const sql = `SELECT * FROM Listings WHERE ProductID = ?`;
     const [rows] = await db.query(sql, [listingId]);

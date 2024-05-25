@@ -18,19 +18,12 @@ export const intent = async (req, res, next) => {
   try {
     const listing = await getListingById(req.params.id);
 
-    // Debugging logs
-    console.log("Listing fetched:", listing);
-
     if (!listing) {
       return next(createError(404, "Listing not found"));
     }
 
-    console.log("Listing price:", listing.Price);
-    console.log("Type of listing price:", typeof listing.Price);
-
     // Ensure listing.Price is a number
     const price = parseFloat(listing.Price);
-    console.log("Parsed price:", price);
 
     if (isNaN(price)) {
       return next(createError(400, "Invalid listing price"));
@@ -58,7 +51,7 @@ export const intent = async (req, res, next) => {
       PaymentID: null, // This will be updated when payment is confirmed
       OrderDate: new Date(),
       OrderStatus: 'Pending',
-      AmountReceived: 0,
+      AmountReceived: 0, 
       RemainingPayment: price,
     };
 
