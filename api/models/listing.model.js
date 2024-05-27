@@ -58,13 +58,59 @@ export const deleteListingById = async (listingId) => {
 };
 
 export const updateListingById = async (listingId, updates) => {
-    const { title, desc, color, size, cat, price, cover, images, deliveryType, features, personalization } = updates;
-    const sql = `UPDATE Listings SET Title = ?, Description = ?, Color = ?, Size = ?, Category = ?, Price = ?, CoverImage = ?, Images = ?, DeliveryType = ?, Features = ?, Personalization = ? 
-                 WHERE ProductID  = ?`;
-    const values = [title, desc, color, size, cat, price, cover, JSON.stringify(images), JSON.stringify(deliveryType), JSON.stringify(features), JSON.stringify(personalization), listingId];
-    const [result] = await db.execute(sql, values);
-    return result.affectedRows;
+  // Destructure the updates object and replace undefined values with null
+  const { 
+    title = null, 
+    description = null, 
+    colorOptions = null, 
+    sizeOptions = null, 
+    category = null, 
+    price = null, 
+    coverImage = null, 
+    images = null, 
+    deliveryType = null, 
+    personalizationOptions = null, 
+    availableStartDate = null, 
+    availableEndDate = null 
+  } = updates;
+
+
+  const sql = `
+    UPDATE Listings SET 
+      Title = ?, 
+      Description = ?, 
+      ColorOptions = ?, 
+      SizeOptions = ?, 
+      Category = ?, 
+      Price = ?, 
+      CoverImage = ?, 
+      Images = ?, 
+      DeliveryType = ?, 
+      PersonalizationOptions = ?, 
+      AvailableStartDate = ?, 
+      AvailableEndDate = ? 
+    WHERE ProductID = ?
+  `;
+  const values = [
+    title, 
+    description, 
+    JSON.stringify(colorOptions), 
+    JSON.stringify(sizeOptions), 
+    category, 
+    price, 
+    coverImage, 
+    JSON.stringify(images), 
+    deliveryType, 
+    personalizationOptions, 
+    availableStartDate, 
+    availableEndDate, 
+    listingId
+  ];
+
+  const [result] = await db.execute(sql, values);
+  return result.affectedRows;
 };
+
 
 export const getListingsBySellerId = async (sellerId) => {
     try {

@@ -48,7 +48,7 @@ function Navbar() {
           </Link>
         </div>
         <div className="links">
-          {!currentUser?.isSeller && <span>Become a Seller</span>}
+          {!currentUser?.isSeller}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
               <img src={currentUser.img || "/img/userProfile.jpg"} alt="" />
@@ -79,10 +79,13 @@ function Navbar() {
             </div>
           ) : (
             <>
-              <Link to="/login" className="link">Sign in</Link>
-              <Link className="link" to="/register">
-                <button>Join</button>
+              <Link to="/login" className="link">
+                <button>Sign in</button>
               </Link>
+             {/* <Link className="link" to="/register">
+                <button>Register</button>
+              </Link>
+          */ }
             </>
           )}
         </div>
@@ -96,7 +99,7 @@ function Navbar() {
             </span>
             <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=floral")}>
               Floral
-            </span>
+           </span>
             <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=cake")}>
               Cake
             </span>

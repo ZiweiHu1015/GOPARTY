@@ -10,12 +10,8 @@ function Register() {
   const [user, setUser] = useState({
     username: "",
     email: "",
-    password: "",  // Add this line for confirm password
-    img: "",
-    country: "",
+    password: "", 
     isSeller: false,
-    desc: "",
-    phone: "",  // Ensure you have phone in your initial state if you're using it in the form.
   });
 
   const navigate = useNavigate();
@@ -65,7 +61,7 @@ function Register() {
           <input
             name="username"
             type="text"
-            placeholder="Emma"
+            placeholder="username"
             onChange={handleChange}
           />
           <label>Email</label>

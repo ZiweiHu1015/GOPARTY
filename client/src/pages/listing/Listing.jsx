@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Gig.scss";
+import "./Listing.scss";
 import { Slider } from "infinite-react-carousel/lib";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 
 
-function Gig() {
+function Listing() {
   const { id } = useParams();
   const [personalizationText, setPersonalizationText] = useState("");
 
@@ -48,9 +48,6 @@ const handleConfirmOrder = () => {
   localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
   window.location.href = `/pay/${id}`; // Using window.location for redirection
 }
-
-
-
 
 
   return (
@@ -200,4 +197,4 @@ const handleConfirmOrder = () => {
   );
 }
 
-export default Gig;
+export default Listing;

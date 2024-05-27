@@ -87,26 +87,60 @@ import {
   export const updateListing = async (req, res, next) => {//untested
     const { id } = req.params;
     try {
+      console.log(`Received request to update listing with ID: ${id}`);
+
       const listing = await getListingById(id);
       if (!listing) {
+        console.log(`Listing with ID ${id} not found`); 
         return next(createError(404, "Listing not found"));
       }
   
-      if (listing.userId !== req.userId) {
+      if (listing.SellerID !== req.userId) {
+        console.log(`Unauthorized update attempt. Listing SellerID: ${listing.SellerID}, Requesting UserID: ${req.userId}`); 
         return next(createError(403, "You are only allowed to update your own listings"));
       }
   
-      const { title, desc, color, size, cat, price, cover, images, deliveryType, features, personalization } = req.body;
-      const updates = { title, desc, color, size, cat, price, cover, images, deliveryType, features, personalization };
+      const { 
+        title, 
+        description, 
+        colorOptions, 
+        sizeOptions, 
+        category, 
+        price, 
+        coverImage, 
+        images, 
+        deliveryType, 
+        personalizationOptions, 
+        availableStartDate, 
+        availableEndDate 
+      } = req.body;
   
+      const updates = { 
+        title, 
+        description, 
+        colorOptions, 
+        sizeOptions, 
+        category, 
+        price, 
+        coverImage, 
+        images, 
+        deliveryType, 
+        personalizationOptions, 
+        availableStartDate, 
+        availableEndDate 
+      };
+      
+
       const result = await updateListingById(id, updates);
       if (result === 0) {
+        console.log(`No updates were made to the listing with ID ${id}`);
         return next(createError(404, "No updates were made to the listing"));
       }
   
       const updatedListing = await getListingById(id);
       res.status(200).send(updatedListing);
     } catch (error) {
+      console.error(`Server error while updating listing: ${error.message}`);
       next(createError(500, "Server error while updating listing"));
     }
   };

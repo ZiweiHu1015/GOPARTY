@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Login.scss";
 import newRequest from "../../utils/newRequest";
-import { useNavigate } from "react-router-dom";
+import register from "../register/Register";
+import { useNavigate,Link} from "react-router-dom";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -28,12 +29,18 @@ function Login() {
   return (
     <div className="login">
       <form onSubmit={handleSubmit}>
-        <h1>Sign in</h1>
+       
+        <div class = "header-container">
+          <h1> 
+          <Link to="/login">Sign in</Link> / <Link to="/register">Register</Link>
+          </h1>
+        </div>
+ 
         <label htmlFor="">Username</label>
         <input
           name="username"
           type="text"
-          placeholder="johndoe"
+          placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
         />
 
@@ -43,7 +50,7 @@ function Login() {
           type="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Login</button>
+        <button type="submit">Sign in</button>
         {error && error}
       </form>
     </div>

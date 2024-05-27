@@ -4,8 +4,8 @@ import React from "react";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
-import Gigs from "./pages/gigs/Gigs";
-import Gig from "./pages/gig/Gig";
+import Listings from "./pages/listings/Listings";
+import Listing from "./pages/listing/Listing";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Add from "./pages/add/Add";
@@ -44,8 +44,8 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/gigs",
-          element: <Gigs />,
+          path: "/listings",
+          element: <Listings />,
         },
         {
           path: "/myGigs",
@@ -68,8 +68,8 @@ function App() {
           element: <Add />,
         },
         {
-          path: "/gig/:id",
-          element: <Gig />,
+          path: "/listing/:id",
+          element: <Listing />,
         },
         {
           path: "/register",

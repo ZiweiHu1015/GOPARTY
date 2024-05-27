@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./Gigs.scss";
-import GigCard from "../../components/gigCard/GigCard";
+import "./Listings.scss";
+import ListingCard from "../../components/listingCard/ListingCard";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useLocation } from "react-router-dom";
 
 
-const Gigs = () => {
+const Listings = () => {
     const [sort, setSort] = useState("sales");
     const [open, setOpen] = useState(false);
     const {search} = useLocation();
@@ -16,22 +16,33 @@ const Gigs = () => {
     const minRef = useRef();
     const maxRef = useRef();
 
+    const constructQueryString = () => {
+      const params = new URLSearchParams(search);
+      if (minRef.current?.value) params.set('min', minRef.current.value);
+      if (maxRef.current?.value) params.set('max', maxRef.current.value);
+      if (sort) params.set('sort', sort);
+      return `?${params.toString()}`;
+    };
+
+    const queryString = constructQueryString();
+
     // Construct the query for the API based on current filters
-    const queryString = `${search}&min=${minRef.current?.value}&max=${maxRef.current?.value}&sort=${sort}`;
+    //const queryString = `${search}&min=${minRef.current?.value}&max=${maxRef.current?.value}&sort=${sort}`;
 
     const { isLoading, error, data, refetch } = useQuery({
-      queryKey: ["gigs"],
-      queryFn: () =>
-        newRequest
-          .get(
-            `/gigs${search}&min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`
-          )
+      queryKey: ["listings"],
+      queryFn: () => {
+        return newRequest
+          .get(`/listing${queryString}`)
           .then((res) => {
             return res.data;
-          }),
+          })
+          .catch((err) => {
+            console.error("Error fetching listings:", err.response ? err.response.data : err.message);
+            throw err;
+          });
+      },
     });
-
-   // console.log(data);
 
     const reSort = (type) =>{
         setSort(type)
@@ -49,7 +60,7 @@ const Gigs = () => {
 
 
   return (
-    <div className = 'gigs'>
+    <div className = 'listings'>
       <div className = "container">
         <span className = "breadcrumbs"> GoParty {">"} {category}</span>
         <h1>Party Experts</h1>
@@ -80,15 +91,21 @@ const Gigs = () => {
                 </div>
             </div>
             <div className="cards">
-              {isLoading
-                ? "loading"
-                : error
-                ? "Something went wrong!"
-                : data.map((gig) => <GigCard key={gig._id} item={gig} />)}
+            {isLoading
+              ? "loading"
+              : error
+              ? "Something went wrong!"
+              : (
+                console.log("Data before mapping:", data), // Debugging log
+                data && data.length > 0 // Ensure data is not undefined and has items
+                ? data.map((listing) => <ListingCard key={listing.ProductID} item={listing} />)
+                : "No listings found."
+              )
+          }
            </div>
         </div>
     </div>
   );
 }
 
-export default Gigs;
+export default Listings;
