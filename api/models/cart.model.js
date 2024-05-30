@@ -2,19 +2,23 @@ import db from '../database.js'; // Ensure this points to your configured MySQL 
 
 // Function to add an item to the cart
 export const addItemToCart = async (userId, productId, quantity = 1) => {
-  const sql = `
-    INSERT INTO ShoppingCart (UserID, ProductID, Quantity)
-    VALUES (?, ?, ?)
-    ON DUPLICATE KEY UPDATE Quantity = Quantity + VALUES(Quantity)
-  `;
-  try {
-    const [result] = await db.execute(sql, [userId, productId, quantity]);
+  // First, check if the item already exists in the cart
+  const checkSql = `SELECT * FROM ShoppingCart WHERE UserID = ? AND ProductID = ?`;
+  const [existingItems] = await db.query(checkSql, [userId, productId]);
+
+  if (existingItems.length > 0) {
+    // Item exists, update the quantity
+    const updateSql = `UPDATE ShoppingCart SET Quantity = Quantity + ? WHERE UserID = ? AND ProductID = ?`;
+    const [result] = await db.execute(updateSql, [quantity, userId, productId]);
+    return existingItems[0].CartID;
+  } else {
+    // Item does not exist, insert a new row
+    const insertSql = `INSERT INTO ShoppingCart (UserID, ProductID, Quantity) VALUES (?, ?, ?)`;
+    const [result] = await db.execute(insertSql, [userId, productId, quantity]);
     return result.insertId;
-  } catch (error) {
-    console.error('Failed to add item to cart: ' + error.message);
-    throw new Error('Failed to add item to cart: ' + error.message);
   }
 };
+
 
 // Function to retrieve cart items grouped by SellerID
 export const getCartItemsGroupedBySeller = async () => {
@@ -57,7 +61,6 @@ export const updateCartItemQuantity = async (userId, productId, quantity) => {
 export const removeItemFromCart = async (userId, productId) => {
   const sql = `DELETE FROM ShoppingCart WHERE UserID = ? AND ProductID = ?`;
  
-  console.log("userid: ",userId,"productId: ",productId );
   try {
     const [result] = await db.execute(sql, [userId, productId]);
     

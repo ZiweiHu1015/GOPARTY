@@ -11,7 +11,6 @@ import {
   export const addToCart = async (req, res, next) => {
     const { productId, quantity } = req.body;
     const userId = req.userId;
-  
     try {
       const cartId = await addItemToCart(userId, productId, quantity);
       res.status(201).send({ cartId, message: "Item added to cart" });
@@ -41,9 +40,7 @@ export const updateCartItem = async (req, res, next) => {
   export const removeCartItem = async (req, res, next) => {
     const { productId } = req.params;
     const userId = req.userId;
-  
     console.log("Received request to remove item from cart.");
-    console.log("userId:", userId, "productId:", productId); // Debug log
 
     try {
       console.log(`Attempting to remove cart item with UserID: ${userId} and ProductID: ${productId}`);

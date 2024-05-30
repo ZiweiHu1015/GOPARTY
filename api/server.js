@@ -64,7 +64,7 @@ import messageRoute from "./routes/message.route.js";
 import reviewRoute from "./routes/review.route.js";
 import authRoute from "./routes/auth.route.js";
 import cartRoute from "./routes/cart.route.js";
-
+import favoriteRoute from "./routes/favorite.route.js";
 dotenv.config();
 
 const app = express();
@@ -88,6 +88,7 @@ app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/reviews", reviewRoute);
 app.use("/api/cart", cartRoute);
+app.use("/api/favorite", favoriteRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
