@@ -61,7 +61,7 @@ const Add = () => {
 
   const mutation = useMutation({
     mutationFn: (gig) => {
-      return newRequest.post("/gigs", gig);
+      return newRequest.post("/listings", gig);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);

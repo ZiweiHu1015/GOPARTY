@@ -12,17 +12,16 @@ export const createListing = async (listingData) => {
         AvailableStartDate: availableStartDate,
         AvailableEndDate: availableEndDate,
         DeliveryType: deliveryType,
-        ColorOptions: colorOptions,
-        SizeOptions: sizeOptions,
         PersonalizationOptions: personalizationOptions,
-        Images: images 
+        Images: images,
+        Options: options
     } = listingData;
     
-    //console.log("Received listing data:", listingData);
+    console.log("Received listing data:", listingData);
 
     const sql = `INSERT INTO Listings 
-                    (SellerID, Title, Description, Category, Price, CoverImage, AvailableStartDate, AvailableEndDate, DeliveryType, ColorOptions, SizeOptions, PersonalizationOptions, Images)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    (SellerID, Title, Description, Category, Price, CoverImage, AvailableStartDate, AvailableEndDate, DeliveryType, PersonalizationOptions, Images, Options)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         userId,
@@ -34,19 +33,32 @@ export const createListing = async (listingData) => {
         availableStartDate || null,
         availableEndDate || null,
         deliveryType ,
-        colorOptions,
-        sizeOptions,
         personalizationOptions || null,
-        images ? JSON.stringify(images) : null
+        images ? JSON.stringify(images) : null,
+        JSON.stringify(options)
     ];
+
     console.log("Values to insert:", values);
 
     const [result] = await db.execute(sql, values);
-    return result.insertId;
+    try {
+        const [result] = await db.execute(sql, values);
+        console.log("Insert result:", result); // Debug message
+        return result.insertId;
+    } catch (error) {
+        console.error("Error executing SQL:", error); // Debug message
+        throw error;
+    }
 };
 
 export const getListingById = async (listingId) => {
-    const sql = `SELECT * FROM Listings WHERE ProductID = ?`;
+    const sql = ` SELECT 
+        l.*, 
+        u.Username, 
+        u.ProfilePicture
+        FROM Listings l
+        JOIN Users u ON l.SellerID = u.UserID
+        WHERE l.ProductID = ?`;
     const [rows] = await db.query(sql, [listingId]);
     return rows[0];
 };
@@ -62,8 +74,6 @@ export const updateListingById = async (listingId, updates) => {
   const { 
     title = null, 
     description = null, 
-    colorOptions = null, 
-    sizeOptions = null, 
     category = null, 
     price = null, 
     coverImage = null, 
@@ -71,7 +81,8 @@ export const updateListingById = async (listingId, updates) => {
     deliveryType = null, 
     personalizationOptions = null, 
     availableStartDate = null, 
-    availableEndDate = null 
+    availableEndDate = null,
+    options = null
   } = updates;
 
 
@@ -79,8 +90,6 @@ export const updateListingById = async (listingId, updates) => {
     UPDATE Listings SET 
       Title = ?, 
       Description = ?, 
-      ColorOptions = ?, 
-      SizeOptions = ?, 
       Category = ?, 
       Price = ?, 
       CoverImage = ?, 
@@ -88,14 +97,13 @@ export const updateListingById = async (listingId, updates) => {
       DeliveryType = ?, 
       PersonalizationOptions = ?, 
       AvailableStartDate = ?, 
-      AvailableEndDate = ? 
+      AvailableEndDate = ? ,
+      Options = ?
     WHERE ProductID = ?
   `;
   const values = [
     title, 
     description, 
-    JSON.stringify(colorOptions), 
-    JSON.stringify(sizeOptions), 
     category, 
     price, 
     coverImage, 
@@ -104,6 +112,7 @@ export const updateListingById = async (listingId, updates) => {
     personalizationOptions, 
     availableStartDate, 
     availableEndDate, 
+    JSON.stringify(options),
     listingId
   ];
 
@@ -121,6 +130,10 @@ export const getListingsBySellerId = async (sellerId) => {
             WHERE U.UserID = ? AND U.isSeller = TRUE
         `;
         const [rows] = await db.query(sql, [sellerId]);
+        rows.forEach(row => {
+            row.Images = JSON.parse(row.Images || '[]');
+            row.Options = JSON.parse(row.Options || '[]'); // Parse the options JSON string back to an array
+        });
         return rows;
     } catch (error) {
         throw error;
@@ -129,10 +142,28 @@ export const getListingsBySellerId = async (sellerId) => {
 
 
 export const getListingsByCategory = async (category) => {
-    const sql = `SELECT * FROM Listings WHERE Category = ?`;
-    const [rows] = await db.query(sql, [category]);
-    return rows;
+    try {
+        const sql = `SELECT * FROM Listings WHERE Category = ?`;
+        const [rows] = await db.query(sql, [category]);
+         rows.forEach(row => {
+            try {
+                row.Images = JSON.parse(row.Images || '[]');
+            } catch (err) {
+                row.Images = [];
+            }
+            try {
+                row.Options = JSON.parse(row.Options || '[]');
+            } catch (err) {
+                row.Options = [];
+            }
+        });
+        return rows;
+    } catch (error) {
+        console.error("Error querying the database in getListingsByCategory:", error); // Log the error details
+        throw error;
+    }
 };
+
 
 export const getAllListings = async () => {
     try {
@@ -141,6 +172,18 @@ export const getAllListings = async () => {
             FROM Listings
         `;
         const [rows] = await db.query(sql);
+        rows.forEach(row => {
+            try {
+                row.Images = JSON.parse(row.Images || '[]');
+            } catch (err) {
+                row.Images = [];
+            }
+            try {
+                row.Options = JSON.parse(row.Options || '[]');
+            } catch (err) {
+                row.Options = [];
+            }
+        });
         return rows;
     } catch (error) {
         console.error("Error querying the database in getAllListings:", error); // Log the error details

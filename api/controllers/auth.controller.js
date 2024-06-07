@@ -9,7 +9,6 @@ export const register = async (req, res, next) => {
     const { username, email, password, isSeller } = req.body;
     const hash = bcrypt.hashSync(password, 10); //hash password
     const userId = await createUser({ username, email, password: hash, isSeller });
-
     if (isSeller) {
       const {  storeName, storeDescription, mainService, serviceDays, serviceArea, serviceType } = req.body;
 

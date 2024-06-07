@@ -30,10 +30,45 @@ export const createUser = async (userData) => {
 };
 
 export const getUserById = async (id) => {
-    const sql = `SELECT * FROM Users WHERE UserID= ?`;
-    const [rows] = await db.query(sql, [id]);
-    return rows[0];
+  // First, get the user information and check if the user is a seller
+  const userSql = `SELECT * FROM Users WHERE UserID = ?`;
+  const [userRows] = await db.query(userSql, [id]);
+  const user = userRows[0];
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Check if the user is a seller
+  const isSeller = user.isSeller === 1; // Assuming 1 indicates a seller
+
+  if (isSeller) {
+    // If the user is a seller, join with the Sellers table and return combined data
+    const sellerSql = `
+      SELECT 
+        u.UserID, 
+        u.FirstName,
+        u.CreatedAt,
+        s.StoreName, 
+        s.StoreDescription, 
+        s.MainService, 
+        s.ServiceDays, 
+        s.ServiceArea, 
+        s.ServiceType
+      FROM 
+        Users u
+        JOIN Sellers s ON u.UserID = s.UserID
+      WHERE 
+        u.UserID = ?;
+    `;
+    const [sellerRows] = await db.query(sellerSql, [id]);
+    return sellerRows[0];
+  } else {
+    // If the user is not a seller, return user information only
+    return user;
+  }
 };
+
 
 export const deleteUserById = async (id) => {
     const sql = `DELETE FROM Users WHERE UserID = ?`;

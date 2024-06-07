@@ -13,7 +13,7 @@ function MyGigs() {
     queryKey: ["myGigs"],
     queryFn: async () => {
       try {
-        const response = await newRequest.get(`/gigs?userId=${currentUser._id}`);
+        const response = await newRequest.get(`/listings?userId=${currentUser._id}`);
         return response.data;
       } catch (error) {
         throw new Error("Failed to fetch data");
@@ -24,7 +24,7 @@ function MyGigs() {
 
   const mutation = useMutation({
     mutationFn: (id) => {
-      return newRequest.delete(`/gigs/${id}`);
+      return newRequest.delete(`/listings/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);

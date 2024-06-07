@@ -94,19 +94,19 @@ function Navbar() {
        <>
           <hr />
           <div className="menu">
-            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=balloon")}>
+            <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=balloon")}>
               Balloon Art
             </span>
-            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=floral")}>
+            <span className="link menuLink" onClick={() => handleNavigation("/gilistingsgs?cat=floral")}>
               Floral
            </span>
-            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=cake")}>
+            <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=cake")}>
               Cake
             </span>
-            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=package")}>
+            <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=package")}>
               Packages
             </span>
-            <span className="link menuLink" onClick={() => handleNavigation("/gigs?cat=grabandgo")}>
+            <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=grabandgo")}>
               Grab and Go
             </span>
           </div>

@@ -7,11 +7,11 @@ function Featured() {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    navigate(`/gigs?search=${input}`);
+    navigate(`/listings?search=${input}`);
   };
 
   const handleSearch = (keyword) => {
-    navigate(`/gigs?search=${keyword}`);  // Navigate to search page with preset keyword
+    navigate(`/listings?search=${keyword}`);  // Navigate to search page with preset keyword
   };
 
   return (

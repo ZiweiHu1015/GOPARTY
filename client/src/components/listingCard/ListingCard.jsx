@@ -17,8 +17,16 @@ const ListingCard = ({ item }) => {
     }
   });
 
-  console.log("ListingCard item:", item); // Debug message
-  console.log("ListingCard user data:", data);
+  const handleFavoriteClick = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await newRequest.post('/favorite/add', { productId: item.ProductID });
+      console.log('Item added to favorites:', response.data);
+      // Optionally, you can add some UI feedback here, like changing the heart icon color
+    } catch (error) {
+      console.error('Error adding item to favorites:', error.response ? error.response.data : error.message);
+    }
+  };
 
   return (
     <Link to={`/listing/${item.ProductID}`} className="link">
@@ -27,7 +35,7 @@ const ListingCard = ({ item }) => {
           <div className="priceCircle">
             <h2>$ {item.Price}</h2>
           </div>
-          <div className="favoriteIcon">
+          <div className="favoriteIcon" onClick={handleFavoriteClick}>
           <img src="./img/heart.png" alt="Save to Favorite" />
         </div>
         </div>

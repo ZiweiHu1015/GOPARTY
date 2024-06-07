@@ -1,4 +1,4 @@
-.gig {
+.listing {
     display: flex;
     justify-content: center;
   
@@ -22,44 +22,6 @@
           color: #555;
         }
   
-        h1 {
-        }
-  
-        .user {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-  
-          .pp {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-          }
-  
-          span {
-            font-size: 14px;
-            font-weight: 500;
-          }
-  
-          .stars {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-  
-            img {
-              height: 14px;
-              width: 14px;
-            }
-  
-            span {
-              font-size: 14px;
-              font-weight: bold;
-              color: #ffc108;
-            }
-          }
-        }
-  
         .slider {
           background-color: #F5F5F5;
           img {
@@ -78,88 +40,6 @@
           color: #555;
         }
   
-        .seller {
-          margin-top: 50px;
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-  
-          .user {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-  
-            img {
-              width: 100px;
-              height: 100px;
-              border-radius: 50%;
-              object-fit: cover;
-            }
-  
-            .info {
-              display: flex;
-              flex-direction: column;
-              gap: 10px;
-  
-              .stars {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-  
-                img {
-                  height: 14px;
-                  width: 14px;
-                }
-  
-                span {
-                  font-size: 14px;
-                  font-weight: bold;
-                  color: #ffc108;
-                }
-              }
-  
-              button {
-                background-color: white;
-                border-radius: 5px;
-                border: 1px solid gray;
-                padding: 10px;
-              }
-            }
-          }
-  
-          .box {
-            border: 1px solid lightgray;
-            border-radius: 5px;
-            padding: 20px;
-            margin-top: 20px;
-  
-            .items {
-              display: flex;
-              justify-content: space-between;
-              flex-wrap: wrap;
-  
-              .item {
-                width: 300px;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 20px;
-  
-                .title {
-                  font-weight: 300;
-                }
-              }
-            }
-  
-            hr {
-              height: 0;
-              border: 0.5px solid lightgray;
-              margin-bottom: 20px;
-            }
-          }
-        }
-  
-        
       }
   
       .right {
@@ -171,7 +51,7 @@
         flex-direction: column;
         gap: 20px;
         height: max-content;
-        max-height: 500px;
+        max-height: 1000px;
         position: sticky;
         top: 150px;
   
@@ -183,34 +63,34 @@
           h2{
             font-weight: 300;
           }
-  
           h3{
             font-weight: 500;
           }
         }
-  
-        p{
-          color: gray;
-          margin: 10px 0px;
-        }
-  
-        .details {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-size: 14px;
-  
-          .item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-  
-            img {
-              width: 20px;
-            }
+
+        .option{
+          .options-label {
+            font-size: 14px; 
+            display: inline-block; 
+            margin-bottom: 0px;
+          }
+          .options-dropdown {
+            width: 100%;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
           }
         }
-  
+
+        .details {
+          .detail-item {
+            display: block;
+            margin-top: 10px; // Optional: Add some space between rows
+            font-size: 14px; // Optional: Adjust the font size
+          }
+        }
         .features{
           .item{
             display: flex;
@@ -225,20 +105,135 @@
             }
           }
         }
+       
+          .personalizationInput{
+            padding: 10px;
+          }
 
-       .personalizationInput{
-        padding: 20px;
-       }
+       
+         .pay{
+          padding-top: 20px;
+         
+          button{
+            width: 100%;
+            background-color: black;
+            padding: 10px 155px;
+            color: white;
+            font-weight: 500;
+            border-radius: 15px;
+            border: 2px solid black;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; // Smooth transition for transform and box-shadow
 
-        button{
-          background-color: #1dbf73;
-          padding: 10px;
-          color: white;
-          font-weight: 500;
-          border: none;
-          font-size: 18px;
-          cursor: pointer;
+                &:hover {
+                  transform: scale(1); // Slightly increase the size of the button
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Add a shadow effect
+                }
+          }
         }
+
+          .seller {
+            margin-top: 30px;
+            border-top: 1px solid lightgray;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            
+            h2 {
+              margin-bottom: 10px;
+            }
+          
+            .seller-info {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+          
+              .pp {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;
+              }
+          
+              .seller-details {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+          
+                .seller-name {
+                  font-size: 16px;
+                  font-weight: 600;
+                }
+          
+                .owner {
+                  font-size: 14px;
+                  color: #555;
+                }
+          
+                .location {
+                  font-size: 14px;
+                  color: #555;
+                }
+              }
+            }
+          
+            .box {
+              display: flex;
+              flex-direction: column;
+              align-items: center; // Center the button horizontally
+           
+              .items {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+          
+                .item {
+                  width: 300px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  margin-bottom: 20px;
+          
+                  .title {
+                    font-weight: 300;
+                  }
+          
+                  .desc {
+                    font-weight: 400;
+                  }
+                }
+               
+              }
+              .message-button{
+                width: 100%;
+                color: black;
+                padding: 10px 20px;
+                border-radius: 15px;
+                border: 2px solid black;
+                background-color: transparent;
+                cursor: pointer;
+                transition: transform 0.2s, box-shadow 0.2s; // Smooth transition for transform and box-shadow
+
+                &:hover {
+                  transform: scale(1); // Slightly increase the size of the button
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Add a shadow effect
+                }
+              }
+          
+              hr {
+                height: 0;
+                border: 0.5px solid lightgray;
+                margin-bottom: 20px;
+              }
+          
+              p {
+                font-weight: 300;
+                color: #555;
+              }
+            }
+          }
       }
     }
   }

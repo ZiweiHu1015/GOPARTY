@@ -20,11 +20,11 @@ import {
         SellerID: req.userId,
         ...req.body
     };
+    console.log("Creating listing with data:", listingData);
 
     try {
         // Create the listing and get the ProductID of the newly created listing
         const productId = await createListing(listingData);
-        // Retrieve the newly created listing by its ProductID
         const newListing = await getListingById(productId);
         res.status(201).send(newListing);
     } catch (error) {
@@ -65,7 +65,7 @@ import {
     } 
   };
   
-  export const getListings = async (req, res, next) => {//untested
+  export const getListings = async (req, res, next) => {
     try {
       let listings;
       if (req.query.userId) {
@@ -74,8 +74,7 @@ import {
       } else if (req.query.cat) {
         listings = await getListingsByCategory(req.query.cat);
       } else {
-        // Implement a more general find method if needed
-        listings = await getAllListings(); // This function needs to be implemented in model
+        listings = await getAllListings(); 
       }
       res.status(200).send(listings);
     } catch (error) {
@@ -84,7 +83,7 @@ import {
   };
   
 
-  export const updateListing = async (req, res, next) => {//untested
+  export const updateListing = async (req, res, next) => {
     const { id } = req.params;
     try {
       console.log(`Received request to update listing with ID: ${id}`);
@@ -103,8 +102,6 @@ import {
       const { 
         title, 
         description, 
-        colorOptions, 
-        sizeOptions, 
         category, 
         price, 
         coverImage, 
@@ -112,14 +109,13 @@ import {
         deliveryType, 
         personalizationOptions, 
         availableStartDate, 
-        availableEndDate 
+        availableEndDate,
+        options
       } = req.body;
   
       const updates = { 
         title, 
         description, 
-        colorOptions, 
-        sizeOptions, 
         category, 
         price, 
         coverImage, 
@@ -127,7 +123,8 @@ import {
         deliveryType, 
         personalizationOptions, 
         availableStartDate, 
-        availableEndDate 
+        availableEndDate ,
+        options
       };
       
 
