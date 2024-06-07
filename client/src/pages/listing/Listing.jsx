@@ -9,6 +9,7 @@ import Reviews from "../../components/reviews/Reviews";
 function Listing() {
   const { id } = useParams();
   const [personalizationText, setPersonalizationText] = useState("");
+  const [savedText, setSavedText] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
 
   const { isLoading, error, data } = useQuery({
@@ -47,6 +48,12 @@ function Listing() {
     window.location.href = `/pay/${data.ProductID}`;
   };
 
+  const handlePersonalizationSave = (e) => {
+    if (e.key === "Enter") {
+      setSavedText(personalizationText);
+      setPersonalizationText(""); // Clear the input box
+    }
+  };
 
   return (
     <div className="listing">
@@ -104,31 +111,31 @@ function Listing() {
             <span className = "detail-item">Delivery Type: <strong>{data.DeliveryType}</strong></span>
             </div>
 
-            <div className = "personalization">
-            <label htmlFor="personalizationInput">Add personalization for your order(extra charge may apply):</label>
+         
+         
+            <label htmlFor="personalizationInput">Add personalization for your order:</label>
             <input
               type="text"
               className="personalizationInput"
               id="personalizationInput"
               value={personalizationText}
               onChange={(e) => setPersonalizationText(e.target.value)}
+              onKeyPress={handlePersonalizationSave} // Properly handle the onKeyPress event
               placeholder="Type any specific details here..."
             />
-           </div>
-            <div className="features">
-              {data.PersonalizationOptions.split(',').map((option) => (
-                <div className="item" key={option}>
-                  <img src="/img/greencheck.png" alt="" />
-                  <span>{option}</span>
-                </div>
-              ))}
-              <div className = "pay">
+            {savedText && (
+              <div className="saved-text">
+                Personalization: {savedText} 
+                <button className="remove-button" onClick={() => setSavedText("")}>×</button>
+              </div>
+            )}
+
+            <div className = "pay">
               <Link to={`/pay/${data.ProductID}`}>
                <button onClick={handleConfirmOrder}>Confirm Order</button>
               </Link>
-              </div>
             </div>
-          
+
             <div className="seller">
               <p>Meet your seller</p>
               <div className="seller-info">

@@ -91,6 +91,7 @@
             font-size: 14px; // Optional: Adjust the font size
           }
         }
+
         .features{
           .item{
             display: flex;
@@ -107,8 +108,30 @@
         }
        
           .personalizationInput{
-            padding: 10px;
+            padding: 15px;
+          
           }
+
+          .saved-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          
+            .remove-button {
+              background: none;
+              border: none;
+              color: grey;
+              font-size: 16px;
+              cursor: pointer;
+              margin-left: 10px;
+              padding: 0;
+              line-height: 1;
+          
+              &:hover {
+                color: darkred;
+              }
+            }
+          }            
 
        
          .pay{
