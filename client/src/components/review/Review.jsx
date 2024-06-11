@@ -2,12 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import newRequest from "../../utils/newRequest";
 import "./Review.scss";
+
+
 const Review = ({ review }) => {
+  console.log("Review component rendered with review:", review); 
+
   const { isLoading, error, data } = useQuery(
     {
-      queryKey: [review.userId],
+      queryKey: [review.BuyerID],
       queryFn: () =>
-        newRequest.get(`/users/${review.userId}`).then((res) => {
+        newRequest.get(`/users/${review.BuyerID}`).then((res) => {
+          console.log("Fetched user data:", res.data);
           return res.data;
         }),
     },
@@ -22,24 +27,29 @@ const Review = ({ review }) => {
         "error"
       ) : (
         <div className="user">
-          <img className="pp" src={data.img || "/img/noavatar.jpg"} alt="" />
+          <img className="pp" src={data.ProfilePicture || "/img/noavatar.jpg"} alt="" />
           <div className="info">
-            <span>{data.username}</span>
+            <span>{data.FirstName}</span>
             <div className="country">
-              <span>{data.country}</span>
+              <span>{data.Location}</span>
             </div>
           </div>
         </div>
       )}
+      
       <div className="stars">
-        {Array(review.star)
+        {Array(review.rating)
           .fill()
           .map((item, i) => (
             <img src="/img/star.png" alt="" key={i} />
           ))}
-        <span>{review.star}</span>
+        <span>{review.rating}</span>
       </div>
-      <p>{review.desc}</p>
+      
+      <div className = "review-detail">
+        <p className = "comment">{review.Comment}</p>
+        <p className = "timestamp">{review.Timestamp.slice(0, 10)}</p>
+      </div>
       <div className="helpful">
         <span>Helpful?</span>
         <img src="/img/like.png" alt="" />

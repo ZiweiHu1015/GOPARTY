@@ -84,13 +84,29 @@
           }
         }
 
-        .details {
-          .detail-item {
-            display: block;
-            margin-top: 10px; // Optional: Add some space between rows
-            font-size: 14px; // Optional: Adjust the font size
-          }
+      
+        .chooseDate{
+          display: flex;
+          flex-direction: column; // Ensures that children are stacked vertically
+          margin-top: 10px; // Optional: Add some space between rows
+          font-size: 14px; // Adjust the font size as needed
         }
+        
+        .date-picker-label {
+          font-size: 14px;
+          display: inline-block; ; // Ensures the label takes the full width of its container
+          margin-bottom: 5px; // Add some space between the label and the date picker
+        }
+        
+        .date-picker {
+            width: 96%;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
 
         .features{
           .item{
@@ -107,32 +123,49 @@
           }
         }
        
-          .personalizationInput{
-            padding: 15px;
-          
-          }
-
-          .saved-text {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          
-            .remove-button {
-              background: none;
-              border: none;
-              color: grey;
-              font-size: 16px;
-              cursor: pointer;
-              margin-left: 10px;
-              padding: 0;
-              line-height: 1;
-          
-              &:hover {
-                color: darkred;
-              }
+    
+        .personalization-container {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 10px; // Adjust this value to control the spacing below the input box
+        }
+        
+        .personalization-label {
+          font-size: 14px;
+          margin-bottom: 5px; // Space between the label and the input box
+        }
+        
+        .personalizationInput {
+          width: 96%;
+          margin-top: 5px;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+        }
+        
+        .saved-text {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 10px;
+        
+          .remove-button {
+            background: none;
+            border: none;
+            color: grey;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 0;
+            line-height: 1;
+        
+            &:hover {
+              color: darkred;
             }
-          }            
-
+          }
+        }
+        
        
          .pay{
           padding-top: 20px;
@@ -185,17 +218,7 @@
                 flex-direction: column;
                 gap: 5px;
           
-                .seller-name {
-                  font-size: 16px;
-                  font-weight: 600;
-                }
-          
-                .owner {
-                  font-size: 14px;
-                  color: #555;
-                }
-          
-                .location {
+                .seller-name, .owner, .location , .member-since {
                   font-size: 14px;
                   color: #555;
                 }

@@ -14,14 +14,13 @@ export const createListing = async (listingData) => {
         DeliveryType: deliveryType,
         PersonalizationOptions: personalizationOptions,
         Images: images,
-        Options: options
+        Options: options,
+        UnavailableDates: unavailableDates
     } = listingData;
     
-    console.log("Received listing data:", listingData);
-
     const sql = `INSERT INTO Listings 
-                    (SellerID, Title, Description, Category, Price, CoverImage, AvailableStartDate, AvailableEndDate, DeliveryType, PersonalizationOptions, Images, Options)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    (SellerID, Title, Description, Category, Price, CoverImage, AvailableStartDate, AvailableEndDate, DeliveryType, PersonalizationOptions, Images, Options, UnavailableDates)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         userId,
@@ -35,7 +34,8 @@ export const createListing = async (listingData) => {
         deliveryType ,
         personalizationOptions || null,
         images ? JSON.stringify(images) : null,
-        JSON.stringify(options)
+        JSON.stringify(options),
+        unavailableDates ? JSON.stringify(unavailableDates) : '[]'
     ];
 
     console.log("Values to insert:", values);
@@ -53,12 +53,24 @@ export const createListing = async (listingData) => {
 
 export const getListingById = async (listingId) => {
     const sql = ` SELECT 
-        l.*, 
-        u.Username, 
-        u.ProfilePicture
-        FROM Listings l
-        JOIN Users u ON l.SellerID = u.UserID
-        WHERE l.ProductID = ?`;
+            l.*, 
+            u.FirstName, 
+            u.ProfilePicture,
+            YEAR(u.CreatedAt) AS MemberSince,
+            s.StoreName,
+            s.StoreDescription,
+            s.MainService,
+            s.ServiceDays,
+            s.ServiceArea,
+            s.ServiceType
+        FROM 
+            Listings l
+        JOIN 
+            Users u ON l.SellerID = u.UserID
+        JOIN 
+            Sellers s ON l.SellerID = s.UserID
+        WHERE 
+            l.ProductID = ?`;
     const [rows] = await db.query(sql, [listingId]);
     return rows[0];
 };
@@ -70,7 +82,6 @@ export const deleteListingById = async (listingId) => {
 };
 
 export const updateListingById = async (listingId, updates) => {
-  // Destructure the updates object and replace undefined values with null
   const { 
     title = null, 
     description = null, 
@@ -82,7 +93,8 @@ export const updateListingById = async (listingId, updates) => {
     personalizationOptions = null, 
     availableStartDate = null, 
     availableEndDate = null,
-    options = null
+    options = null,
+    UnavailableDates = null
   } = updates;
 
 
@@ -98,7 +110,8 @@ export const updateListingById = async (listingId, updates) => {
       PersonalizationOptions = ?, 
       AvailableStartDate = ?, 
       AvailableEndDate = ? ,
-      Options = ?
+      Options = ?,
+      UnavailableDates = ?
     WHERE ProductID = ?
   `;
   const values = [
@@ -113,9 +126,9 @@ export const updateListingById = async (listingId, updates) => {
     availableStartDate, 
     availableEndDate, 
     JSON.stringify(options),
+    JSON.stringify(UnavailableDates), 
     listingId
   ];
-
   const [result] = await db.execute(sql, values);
   return result.affectedRows;
 };

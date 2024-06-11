@@ -5,13 +5,14 @@ import Review from "../review/Review";
 import "./Reviews.scss";
 
 
-const Reviews = ({ gigId }) => {
+const Reviews = ({ ProductID }) => {
 
   const queryClient = useQueryClient()
   const { isLoading, error, data } = useQuery({
     queryKey: ["reviews"],
     queryFn: () =>
-      newRequest.get(`/reviews/${gigId}`).then((res) => {
+      newRequest.get(`/reviews/${ProductID}`).then((res) => {
+        console.log("Fetched reviews data:", res.data)
         return res.data;
       }),
   });
@@ -29,7 +30,7 @@ const Reviews = ({ gigId }) => {
     e.preventDefault();
     const desc = e.target[0].value;
     const star = e.target[1].value;
-    mutation.mutate({ gigId, desc, star });
+    mutation.mutate({ ProductID, desc, star });
   };
 
   return (
@@ -51,7 +52,7 @@ const Reviews = ({ gigId }) => {
             <option value={4}>4</option>
             <option value={5}>5</option>
           </select>
-          <button>Send</button>
+          <button className = "button">Send</button>
         </form>
       </div>
     </div>

@@ -89,6 +89,8 @@ import {
       console.log(`Received request to update listing with ID: ${id}`);
 
       const listing = await getListingById(id);
+      console.log(`Request body: `, req.body); 
+
       if (!listing) {
         console.log(`Listing with ID ${id} not found`); 
         return next(createError(404, "Listing not found"));
@@ -110,7 +112,8 @@ import {
         personalizationOptions, 
         availableStartDate, 
         availableEndDate,
-        options
+        options,
+        UnavailableDates
       } = req.body;
   
       const updates = { 
@@ -124,9 +127,9 @@ import {
         personalizationOptions, 
         availableStartDate, 
         availableEndDate ,
-        options
+        options,
+        UnavailableDates
       };
-      
 
       const result = await updateListingById(id, updates);
       if (result === 0) {

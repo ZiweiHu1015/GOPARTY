@@ -5,12 +5,16 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
+import DatePicker from "react-datepicker";
+import { parseISO } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 
 function Listing() {
   const { id } = useParams();
   const [personalizationText, setPersonalizationText] = useState("");
   const [savedText, setSavedText] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["listing"],
@@ -18,6 +22,7 @@ function Listing() {
       const url = `/listing/${id}`;
       try {
         const res = await newRequest.get(url);
+        console.log(res.data);
         return res.data;
       } catch (err) {
         console.error("Error fetching listing:", err.response ? err.response.data : err.message); // Debug message
@@ -27,7 +32,7 @@ function Listing() {
   });
 
   const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value); // Update selected option state
+    setSelectedOption(event.target.value); 
   };
 
 
@@ -40,10 +45,9 @@ function Listing() {
       personalization: personalizationText,
       deliveryType: data.DeliveryType,
       availableStartDate: data.AvailableStartDate,
-      availableEndDate: data.AvailableEndDate
+      availableEndDate: data.AvailableEndDate,
+      unavailableDates: data.UnavailableDates
     };
-
- 
     localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
     window.location.href = `/pay/${data.ProductID}`;
   };
@@ -53,6 +57,42 @@ function Listing() {
       setSavedText(personalizationText);
       setPersonalizationText(""); // Clear the input box
     }
+  };
+
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const isDateAvailable = (date) => {
+    if (!data.UnavailableDates) {
+      return true;
+    }
+
+    let unavailableDates = [];
+    try {
+      unavailableDates = JSON.parse(data.UnavailableDates);
+    } catch (error) {
+      return true;
+    }
+
+    if (!Array.isArray(unavailableDates)) {
+      return true;
+    }
+
+    const parsedUnavailableDates = unavailableDates.map(dateString => {
+      const parsedDate = parseISO(dateString);
+      return parsedDate;
+    });
+
+    const isAvailable = !parsedUnavailableDates.some(unavailableDate =>
+      date.getFullYear() === unavailableDate.getFullYear() &&
+      date.getMonth() === unavailableDate.getMonth() &&
+      date.getDate() === unavailableDate.getDate()
+    );
+
+    console.log("Checking date:", date, "is available:", isAvailable); // Debug line
+    return isAvailable;
   };
 
   return (
@@ -76,7 +116,7 @@ function Listing() {
             </Slider>
             <h2>About This Listing</h2>
             <p>{data.Description}</p>
-            <Reviews gigId={id} />
+            <Reviews ProductID={id} />
           </div>
           
           <div className="right">
@@ -106,29 +146,46 @@ function Listing() {
             </select>
            </div>
 
-            <div className="details">
-            <span className = "detail-item">Available Dates: <strong>{new Date(data.AvailableStartDate).toLocaleDateString()} - {new Date(data.AvailableEndDate).toLocaleDateString()}</strong></span>
-            <span className = "detail-item">Delivery Type: <strong>{data.DeliveryType}</strong></span>
-            </div>
-
-         
-         
-            <label htmlFor="personalizationInput">Add personalization for your order:</label>
-            <input
-              type="text"
-              className="personalizationInput"
-              id="personalizationInput"
-              value={personalizationText}
-              onChange={(e) => setPersonalizationText(e.target.value)}
-              onKeyPress={handlePersonalizationSave} // Properly handle the onKeyPress event
-              placeholder="Type any specific details here..."
+   
+           <div className="chooseDate">
+            <label htmlFor="datePicker" className="date-picker-label">Choose your Date:</label>
+            <DatePicker
+              selected={selectedDate}
+              onChange={handleDateChange}
+              filterDate={isDateAvailable}
+              placeholderText="Select a date"
+              className="date-picker"
+              id="datePicker"
             />
+          </div>
+            
+    
+            <div className="personalization-container">
+              <label htmlFor="personalizationInput" className="personalization-label">Add personalization for your order:</label>
+              <input
+                type="text"
+                className="personalizationInput"
+                id="personalizationInput"
+                value={personalizationText}
+                onChange={(e) => setPersonalizationText(e.target.value)}
+                onKeyPress={handlePersonalizationSave}
+                placeholder="Type any specific details here..."
+              />
+            </div>
             {savedText && (
               <div className="saved-text">
-                Personalization: {savedText} 
+                Personalization: {savedText}
                 <button className="remove-button" onClick={() => setSavedText("")}>×</button>
               </div>
             )}
+            
+
+            <div className="detail-item">
+            <label className="detail-label">Delivery Type:</label>
+            <strong>{"    "+ data.DeliveryType}</strong>
+          </div>
+
+
 
             <div className = "pay">
               <Link to={`/pay/${data.ProductID}`}>
@@ -146,25 +203,17 @@ function Listing() {
                 />
                 <div className="seller-details">
                   <span className="seller-name">{data.FirstName}</span>
-                  <span className="owner">Owner of {data.ShopName}</span>
-                  <span className="location">Service Location: {data.Location}</span>
-                 
+                  <span className="owner">Owner of {data.StoreName}</span>
+                  <span className="location">Service Location: {data.ServiceArea}</span>
+                  <span className="member-since">Member since:{data.MemberSince}</span>
                 </div>
               </div>
+              
               <div className="box">
-                <div className="items">
-                  <div className="item">
-                    <span className="title">Member since</span>
-                    <span className="desc">{new Date(data.CreatedAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="item">
-                    <span className="title">Service Location</span>
-                    <span className="desc">{data.Location}</span>
-                  </div>
-                </div>
+              
                 <button className="message-button">Contact Seller</button>
                 <hr />
-                <p>{data.Description}</p>
+                <p>{data.StoreDescription}</p>
               </div>
           </div>
           </div>

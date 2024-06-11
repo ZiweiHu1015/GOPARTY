@@ -21,15 +21,23 @@
           padding: 20px;
           align-self: flex-end;
         }
-        button {
-          align-self: flex-end;
-          width: 100px;
-          border: none;
-          padding: 10px;
-          color: white;
-          background-color: #1dbf73;
+
+        .button{
+          color: black;
+          padding: 10px 50px;
+          border-radius: 15px;
+          border: 2px solid black;
+          background-color: transparent;
           cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s; // Smooth transition for transform and box-shadow
+          margin-left: auto;
+
+          &:hover {
+            transform: scale(1); // Slightly increase the size of the button
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Add a shadow effect
+          }
         }
+       
       }
     }
   
