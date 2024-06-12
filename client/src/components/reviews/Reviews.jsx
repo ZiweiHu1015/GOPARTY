@@ -30,7 +30,7 @@ const Reviews = ({ ProductID }) => {
     e.preventDefault();
     const desc = e.target[0].value;
     const star = e.target[1].value;
-    mutation.mutate({ ProductID, desc, star });
+    mutation.mutate({ ProductID, desc, star, sellerId});
   };
 
   return (

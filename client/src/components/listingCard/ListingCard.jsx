@@ -9,7 +9,6 @@ const ListingCard = ({ item }) => {
     queryKey: [item.SellerID], // Ensure this matches your data structure
     queryFn: () =>
       newRequest.get(`/users/${item.SellerID}`).then((res) => {
-        console.log("Fetched user data:", res.data); // Debug message
         return res.data;
       }),
     onError: (err) => {

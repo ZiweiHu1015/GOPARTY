@@ -17,13 +17,10 @@ export const createReview = async (req, res, next) => {
   console.log("req.body:",req.body);
 
   try {
-      // Check if a review already exists to prevent duplicates
       const existingReview = await findReviewByProductAndUser(userId, productId);
       if (existingReview) {
           return next(createError(403, "You have already created a review for this product!"));
       }
-
-      // Prepare review data for the model function
       const reviewData = {
         buyerId: userId,
         productId,
