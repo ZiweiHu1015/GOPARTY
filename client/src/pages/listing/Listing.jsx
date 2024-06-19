@@ -22,7 +22,6 @@ function Listing() {
       const url = `/listing/${id}`;
       try {
         const res = await newRequest.get(url);
-        console.log(res.data);
         return res.data;
       } catch (err) {
         console.error("Error fetching listing:", err.response ? err.response.data : err.message); // Debug message
@@ -116,7 +115,7 @@ function Listing() {
             </Slider>
             <h2>About This Listing</h2>
             <p>{data.Description}</p>
-            <Reviews ProductID={id} />
+            <Reviews ProductID={id} sellerId={data.SellerID}/>
           </div>
           
           <div className="right">

@@ -5,7 +5,7 @@ import Review from "../review/Review";
 import "./Reviews.scss";
 
 
-const Reviews = ({ ProductID }) => {
+const Reviews = ({ ProductID, sellerId }) => {
 
   const queryClient = useQueryClient()
   const { isLoading, error, data } = useQuery({
@@ -28,9 +28,10 @@ const Reviews = ({ ProductID }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const desc = e.target[0].value;
-    const star = e.target[1].value;
-    mutation.mutate({ ProductID, desc, star, sellerId});
+
+    const Comment = e.target[0].value;
+    const Rating = e.target[1].value;
+    mutation.mutate({ ProductID, Comment, Rating, sellerId});
   };
 
   return (

@@ -17,16 +17,10 @@ dotenv.config();
 
 const app = express();
 
-// Middleware to attach db pool to request
-app.use((req, res, next) => {
-  req.db = db;
-  next();
-});
-
+// 连接5173端口
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/sellers", userRoute);
@@ -38,12 +32,21 @@ app.use("/api/reviews", reviewRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/favorite", favoriteRoute);
 
+// Middleware to attach db pool to request
+// 中间件处理请求连接到数据库
+app.use((req, res, next) => {
+  req.db = db;
+  next();
+});
+
+// 中间件处理错误
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
   res.status(errorStatus).send(errorMessage);
 });
 
+// 监听8800端口
 app.listen(8800, () => {
   console.log("Backend server is running on port 8800!");
 });

@@ -11,9 +11,10 @@ export const createReview = async (req, res, next) => {
   }
 
   const userId = req.userId;  
-  const { productId, comment, rating, sellerId } = req.body;  
+  // const { productId, comment, rating, sellerId } = req.body;  
+  const { ProductID: productId, Comment: comment, Rating: rating, sellerId } = req.body;
 
-  console.log("req.productId:",req.body.productId);
+
   console.log("req.body:",req.body);
 
   try {
@@ -23,10 +24,10 @@ export const createReview = async (req, res, next) => {
       }
       const reviewData = {
         buyerId: userId,
-        productId,
-        sellerId,
-        rating,
-        comment,
+        productId: req.body.ProductID,
+        sellerId: req.body.sellerId,
+        rating: req.body.Rating,
+        comment: req.body.Comment,
         images: null
       };
 
@@ -34,7 +35,7 @@ export const createReview = async (req, res, next) => {
       const reviewId = await modelCreateReview(reviewData);
       await updateProductReviewStats(productId, rating);
 
-      const savedReview = { reviewId, userId, productId, desc, rating };
+      const savedReview = { reviewId, userId, productId, comment, rating };
       res.status(201).send(savedReview);
   } catch (err) {
       console.error('Failed to create review:', err);

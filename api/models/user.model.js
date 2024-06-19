@@ -1,24 +1,3 @@
-/*import mongoose from "mongoose";
-const { Schema } = mongoose;
-
-const userSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  firstname: { type: String, required: false },
-  lastname: { type: String, required: false },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  profile_img: { type: String, required: false },
-  location: { type: String, required: false },
-  phone: { type: String, required: false },
-  shipping_address: { type: String, required: false },
-  isSeller: { type: Boolean, default: false }
-},{
-  timestamps:true
-});
-
-export default mongoose.model("User", userSchema)*/
-// user.model.js
-
 //this file is database level operation, it will make changes directly on database 
 import db from '../database.js'; // Import your database connection
 

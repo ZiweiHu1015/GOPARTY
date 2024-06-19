@@ -18,6 +18,7 @@ const ListingCard = ({ item }) => {
 
   const handleFavoriteClick = async (event) => {
     event.preventDefault();
+    
     try {
       const response = await newRequest.post('/favorite/add', { productId: item.ProductID });
       console.log('Item added to favorites:', response.data);

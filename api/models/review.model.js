@@ -44,13 +44,27 @@ export const findReviewByProductAndUser = async (buyerId, productId) => {
 };
 
 // Function to update review statistics in the Listings table (assuming you're updating Listings not Orders)
-export const updateProductReviewStats = async (productId, rating) => {
-    const sql = `
-        UPDATE Listings 
-        SET totalStars = totalStars + ?, starNumber = starNumber + 1
+export const updateProductReviewStats = async (productId, newRating) => {
+    const getCurrentStatsSql = `
+        SELECT AverageRating, ReviewCount 
+        FROM Listings 
         WHERE ProductID = ?
     `;
-    const [result] = await db.execute(sql, [rating, productId]);
+    const [rows] = await db.query(getCurrentStatsSql, [productId]);
+    const { AverageRating, ReviewCount } = rows[0];
+
+    const newReviewCount = ReviewCount + 1;
+    console.log("{ AverageRating, ReviewCount, newRating, newReviewCount} ", { AverageRating, ReviewCount, newRating, newReviewCount} );
+    const newTotalRating = (AverageRating * ReviewCount + newRating) / newReviewCount;
+    console.log("newTotalRating:", newTotalRating);
+    
+    const updateStatsSql = `
+        UPDATE Listings 
+        SET AverageRating = ?, ReviewCount = ? 
+        WHERE ProductID = ?
+    `;
+    console.log("newTotalRating, newReviewCount, productId]:", newTotalRating, newReviewCount, productId);
+    const [result] = await db.execute(updateStatsSql, [newTotalRating, newReviewCount, productId]);
     return result.affectedRows;
 };
 

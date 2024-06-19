@@ -30,7 +30,8 @@ function Login() {
     <div className="login">
       <form onSubmit={handleSubmit}>
        
-        <div class = "header-container">
+        {/* <div class = "header-container"> */}
+        <div className = "header-container">
           <h1> 
           <Link to="/login">Sign in</Link> / <Link to="/register">Register</Link>
           </h1>

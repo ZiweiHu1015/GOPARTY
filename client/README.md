@@ -17,7 +17,6 @@ how to start the application:
 1. yarn run dev
 
 
-
 backend:
 
 1. under api folder, do npm init -y
