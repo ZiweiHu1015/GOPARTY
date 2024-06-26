@@ -1,0 +1,23 @@
+services:
+  api:
+    build: 
+      context: api
+      dockerfile: Dockerfile
+    command: nodemon server.js
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    ports:
+      - "8800:8800"
+  # client:
+  #   build: 
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./client:/client
+  #     - /client/node_modules
+  #   ports:
+  #     - "5173:5173"
+  #   restart: always
+  #   depends_on:
+  #     - api
