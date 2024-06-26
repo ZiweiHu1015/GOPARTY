@@ -1,0 +1,82 @@
+.storeProfile {
+    .container {
+        padding: 20px;
+    }
+    .storeInfo {
+        margin-bottom: 20px;
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+    }
+    .menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        .left {
+            display: flex;
+            align-items: center;
+            span {
+                margin-right: 10px;
+                font-size: 16px;
+            }
+            input {
+                margin-right: 10px;
+                padding: 5px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                padding: 5px 10px;
+                font-size: 16px;
+                border: none;
+                background-color: #000;
+                color: #fff;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            .sortBy {
+                font-size: 16px;
+                margin-right: 10px;
+            }
+            .sortType {
+                font-size: 16px;
+                margin-right: 10px;
+                font-weight: bold;
+            }
+            img {
+                cursor: pointer;
+            }
+            .rightMenu {
+                position: absolute;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                margin-top: 5px;
+                span {
+                    display: block;
+                    padding: 10px;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: #f0f0f0;
+                    }
+                }
+            }
+        }
+    }
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+}
