@@ -68,9 +68,8 @@ import {
   export const getListings = async (req, res, next) => {
     try {
       let listings;
-      if (req.query.userId) {
-        listings = await getListingsBySellerId(req.query.userId);
-
+      if (req.query.sellerId) {
+        listings = await getListingsBySellerId(req.query.sellerId);
       } else if (req.query.cat) {
         listings = await getListingsByCategory(req.query.cat);
       } else {

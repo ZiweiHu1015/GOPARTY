@@ -133,7 +133,6 @@ export const updateListingById = async (listingId, updates) => {
   return result.affectedRows;
 };
 
-
 export const getListingsBySellerId = async (sellerId) => {
     try {
         const sql = `
@@ -144,11 +143,28 @@ export const getListingsBySellerId = async (sellerId) => {
         `;
         const [rows] = await db.query(sql, [sellerId]);
         rows.forEach(row => {
-            row.Images = JSON.parse(row.Images || '[]');
-            row.Options = JSON.parse(row.Options || '[]'); // Parse the options JSON string back to an array
+            try {
+                if (typeof row.Images === 'string' && row.Images.startsWith('[')) {
+                    row.Images = JSON.parse(row.Images);
+                } else {
+                    row.Images = [];
+                }
+            } catch (err) {
+                row.Images = [];
+            }
+            try {
+                if (typeof row.Options === 'string' && row.Options.startsWith('[')) {
+                    row.Options = JSON.parse(row.Options);
+                } else {
+                    row.Options = [];
+                }
+            } catch (err) {
+                row.Options = [];
+            }
         });
         return rows;
     } catch (error) {
+        console.error("Error in getListingsBySellerId: ", error);
         throw error;
     }
 };
