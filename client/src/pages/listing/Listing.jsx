@@ -22,6 +22,7 @@ function Listing() {
       const url = `/listing/${id}`;
       try {
         const res = await newRequest.get(url);
+        console.log("res.data:", res.data);
         return res.data;
       } catch (err) {
         console.error("Error fetching listing:", err.response ? err.response.data : err.message); // Debug message
@@ -41,6 +42,8 @@ function Listing() {
       title: data.Title,
       price: data.Price,
       image: data.Images[0],
+      selectedOption: selectedOption,
+      selectedDate: selectedDate,
       personalization: personalizationText,
       deliveryType: data.DeliveryType,
       availableStartDate: data.AvailableStartDate,
@@ -135,8 +138,8 @@ function Listing() {
               <option value="" disabled>Select an option</option> 
               {data.Options && data.Options.length > 0 ? (
                 data.Options.map((option, index) => (
-                  <option key={index} value={option[0]}>
-                    {option[0]} (${option[1]})
+                  <option key={index} value={option.name}>
+                    {option.name} (${option.price})
                   </option>
                 ))
               ) : (
