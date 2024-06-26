@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./Pay.scss";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import newRequest from "../../utils/newRequest";
 import { useParams } from "react-router-dom";
-import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
+import { format } from 'date-fns';
 
+import newRequest from "../../utils/newRequest";
+import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
 
 const stripePromise = loadStripe(
     "pk_test_51P8QNZP3GPew7dFvznMAM3anMgCKu624BND36TD9MOd6md9lXUtJ77DgBL2qN05aQQEp5DYPN0vw7KjC5kE2eUch00AY9mjIpV"
@@ -33,6 +34,7 @@ const Pay = () => {
          const storedDetails = localStorage.getItem('orderDetails');
          if (storedDetails) {
            setOrderDetails(JSON.parse(storedDetails));
+           console.log("localStorage", localStorage);
          }
      }, [id]);
 
@@ -43,6 +45,11 @@ const Pay = () => {
         clientSecret,
         appearance,
       };
+
+      const formatDate = (dateString) => {
+        return format(new Date(dateString), 'MMMM dd, yyyy');
+      };
+
     
       return <div className="pay">
         <div className = "checkout" >
@@ -61,8 +68,9 @@ const Pay = () => {
                       <img src={orderDetails.image} alt={orderDetails.title} className="orderImage" />
                       <div className="orderDetails">
                         <h3>Title: {orderDetails.title}</h3>
-                        <p>Color: {orderDetails.color}</p>
+                        <p>Option: {orderDetails.selectedOption}</p>
                         <p>Personalization: {orderDetails.personalization}</p>
+                        <p>Date: {formatDate(orderDetails.selectedDate)}</p>
                         {/* Include other details like size etc. */}
                       </div>
                       <div className="orderPrice">

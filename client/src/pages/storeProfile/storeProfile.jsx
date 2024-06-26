@@ -67,6 +67,10 @@ const StoreProfile = () => {
         refetch();
     };
 
+    if(!sellerData) {
+        return <div>no found</div>
+    }
+
     return (
         <div className="storeProfile">
             <div className="container">
@@ -76,6 +80,28 @@ const StoreProfile = () => {
                     "Something went wrong!"
                 ) : (
                     <>
+                        <div className="seller">
+              <div className="seller-info">
+                <img
+                  className="pp"
+                  src={data.ProfilePicture || "/img/userProfile.jpg"}
+                  alt={data.Username}
+                />
+                <div className="seller-details">
+                  <span className="seller-name">{data.FirstName}</span>
+                  <span className="owner">Owner of {data.StoreName}</span>
+                  <span className="location">Service Location: {data.ServiceArea}</span>
+                  <span className="member-since">Member since:{data.MemberSince}</span>
+                </div>
+              </div>
+              
+              <div className="box">
+              
+                <button className="message-button">Contact Seller</button>
+                <hr />
+                <p>{data.StoreDescription}</p>
+              </div>
+                        </div>
                         <div className="storeInfo">
                             <h1>{sellerData.StoreName}</h1>
                             <p>{sellerData.storedescription}</p>
