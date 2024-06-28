@@ -52,21 +52,29 @@ export const updateProductReviewStats = async (productId, newRating) => {
     `;
     const [rows] = await db.query(getCurrentStatsSql, [productId]);
     const { AverageRating, ReviewCount } = rows[0];
+    console.log("Fetched AverageRating, ReviewCount:", AverageRating, ReviewCount);
 
-    const newReviewCount = ReviewCount + 1;
-    console.log("{ AverageRating, ReviewCount, newRating, newReviewCount} ", { AverageRating, ReviewCount, newRating, newReviewCount} );
-    const newTotalRating = (AverageRating * ReviewCount + newRating) / newReviewCount;
-    console.log("newTotalRating:", newTotalRating);
-    
+    // Convert to number
+    const averageRatingNum = Number(AverageRating);
+    const reviewCountNum = Number(ReviewCount);
+    const newRatingNum = Number(newRating);
+
+    // Calculate
+    const newReviewCount = reviewCountNum + 1;
+    const totalRating = averageRatingNum * reviewCountNum + newRatingNum;
+    const newAvgRating = totalRating / newReviewCount;
+
     const updateStatsSql = `
         UPDATE Listings 
         SET AverageRating = ?, ReviewCount = ? 
         WHERE ProductID = ?
     `;
-    console.log("newTotalRating, newReviewCount, productId]:", newTotalRating, newReviewCount, productId);
-    const [result] = await db.execute(updateStatsSql, [newTotalRating, newReviewCount, productId]);
+    const [result] = await db.execute(updateStatsSql, [newAvgRating, newReviewCount, productId]);
+    console.log("Update operation affected rows:", result.affectedRows);
+
     return result.affectedRows;
 };
+
 
 // Function to retrieve reviews by product
 export const getReviewsByProduct = async (productId) => {
@@ -76,7 +84,46 @@ export const getReviewsByProduct = async (productId) => {
 };
 
 export const deleteReviewById = async (reviewId) => {
-  const sql = `DELETE FROM Reviews WHERE ReviewID = ?`;
-  const [result] = await db.execute(sql, [reviewId]);
-  return result.affectedRows;  // This will return the number of rows affected by the delete operation
+    console.log(deleteReviewById);
+    // Get product rating
+    const getReviewDetailsSql = `SELECT ProductID, Rating FROM Reviews WHERE ReviewID = ?`;
+    const [reviewResults] = await db.execute(getReviewDetailsSql, [reviewId]);
+    if (reviewResults.length === 0) {
+        throw new Error('No review found with the given ID');
+    }
+    const productId = reviewResults[0].ProductID;
+    const ratingToDelete = reviewResults[0].Rating;
+
+    // Calculate rating
+    const getStatsSql = `SELECT AverageRating, ReviewCount FROM Listings WHERE ProductID = ?`;
+    const [statsResults] = await db.execute(getStatsSql, [productId]);
+    if (statsResults.length === 0) {
+        throw new Error('No listing found with the given Product ID');
+    }
+    let { AverageRating, ReviewCount } = statsResults[0];
+
+    if (ReviewCount === 1) {
+        AverageRating = 0;                  // set as 0 when there is no review
+    } else {
+        const totalRating = AverageRating * ReviewCount - ratingToDelete;
+        AverageRating = totalRating / (ReviewCount - 1);
+    }
+
+    // Update product rating
+    const updateListingSql = `
+        UPDATE Listings 
+        SET AverageRating = ?, ReviewCount = ReviewCount - 1
+        WHERE ProductID = ?
+    `;
+    await db.execute(updateListingSql, [AverageRating, productId]);
+
+    // Del from Reviews
+    const deleteSql = `DELETE FROM Reviews WHERE ReviewID = ?`;
+    const [deleteResult] = await db.execute(deleteSql, [reviewId]);
+    if (deleteResult.affectedRows === 0) {
+        throw new Error('Deletion failed, no review was deleted');
+    }
+
+    return deleteResult.affectedRows;
 };
+
