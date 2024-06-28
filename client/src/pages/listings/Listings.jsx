@@ -70,8 +70,8 @@ const Listings = () => {
         <div className="menu">
           <div className="left">
             <span>Budget</span>
-            <input ref={minRef} type="number" placeholder="min" />
-            <input ref={maxRef} type="number" placeholder="max" />
+            <input ref={minRef} type="number" min="1" placeholder="min" />
+            <input ref={maxRef} type="number" min="1" placeholder="max" />
             <button onClick={apply}>Apply</button>
            </div>
            <div className="right">
