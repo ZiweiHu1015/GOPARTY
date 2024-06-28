@@ -13,6 +13,7 @@
         h2 {
           margin-bottom: 10px;
         }
+        
       
         .seller-info {
           display: flex;
@@ -25,18 +26,43 @@
             border-radius: 5%;
             object-fit: cover;
           }
-      
-          .seller-details {
+            .seller-details {
+              display: flex;
+              flex-direction: column;
+              gap: 5px;
+
+              .seller-name {
+                font-weight: bold;   // Makes the text bold
+                font-size: 1.5em;    // Adjust the size as needed
+              }
+        
+              .owner, .location , .member-since, .storerating{
+                font-size: 14px;
+                color: #555;
+              }
+            }
+          }
+        
+        .store-rating {
+          display: flex;
+          align-items: center;
+        
+          .storerating {
+            font-weight: bold;
+            margin-right: 10px; // Adjust the spacing between the text and stars
+          }
+        
+          .stars {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-      
-            .seller-name, .owner, .location , .member-since {
-              font-size: 14px;
-              color: #555;
+        
+            img {
+              width: 16px; // Adjust the size of the star image as needed
+              height: auto;
+              margin-right: 2px; // Adjust spacing between stars
             }
           }
         }
+      
       
         .box {
           display: flex;
@@ -66,9 +92,8 @@
            
           }
           .message-button{
-            width: fit-content;
+            width: 10%;
             color: black;
-            margin-left: 40px;
             padding: 10px 20px;
             border-radius: 15px;
             border: 2px solid black;

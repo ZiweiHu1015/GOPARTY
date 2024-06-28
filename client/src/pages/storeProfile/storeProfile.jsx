@@ -44,7 +44,6 @@ const StoreProfile = () => {
           return newRequest
             .get(`/users/${sellerId}`)
             .then((res) => {
-              console.log("Fetched seller data:", res.data); // Print fetched data
               return res.data;
             })
             .catch((err) => {
@@ -80,7 +79,7 @@ const StoreProfile = () => {
                     "Something went wrong!"
                 ) : (
                     <>
-                        <div className="seller">
+           <div className="seller">
               <div className="seller-info">
                 <img
                   className="pp"
@@ -88,12 +87,24 @@ const StoreProfile = () => {
                   alt={data.Username}
                 />
                 <div className="seller-details">
-                  <span className="seller-name">{data.FirstName}</span>
-                  <span className="owner">Owner of {data.StoreName}</span>
-                  <span className="location">Service Location: {data.ServiceArea}</span>
-                  <span className="member-since">Member since:{data.MemberSince}</span>
+                        <span className="seller-name ">{sellerData.FirstName}</span>
+                        <span className="owner ">Owner of {sellerData.StoreName}</span>
+                        <span className="location ">Service Location: {sellerData.ServiceArea}</span>
+                        <span className="member-since ">Member since: {sellerData.CreatedAt.slice(0, 4)}</span>
+                            <div className="store-rating">
+                                    <span className="storerating ">Store Rating:{sellerData.StoreRating}</span>
+                                        <div className="stars">
+                                            {Array(Math.round(sellerData.StoreRating))
+                                            .fill()
+                                            .map((item, i) => (
+                                                <img src="/img/star.png" alt="star" key={i} />
+                                            ))}
+                                        </div>
+                            </div>
                 </div>
-              </div>
+            </div>
+
+          
               
               <div className="box">
               
@@ -101,13 +112,7 @@ const StoreProfile = () => {
                 <hr />
                 <p>{data.StoreDescription}</p>
               </div>
-                        </div>
-                        <div className="storeInfo">
-                            <h1>{sellerData.StoreName}</h1>
-                            <p>{sellerData.storedescription}</p>
-                            <p>Service Location: {sellerData.serviceLocation}</p>
-       
-                        </div>
+                     </div>
                         <div className="menu">
                             <div className="left">
                                 <span>Budget</span>
