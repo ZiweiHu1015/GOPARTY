@@ -198,11 +198,13 @@ function Listing() {
             <div className="seller">
               <p>Meet your seller</p>
               <div className="seller-info">
-                <img
-                  className="pp"
-                  src={data.ProfilePicture || "/img/userProfile.jpg"}
-                  alt={data.Username}
-                />
+              <Link to={`/storeProfile/${data.SellerID}`}>
+                  <img
+                    className="pp"
+                    src={data.ProfilePicture || "/img/userProfile.jpg"}
+                    alt={data.Username}
+                  />
+                </Link>
                 <div className="seller-details">
                   <span className="seller-name">{data.FirstName}</span>
                   <span className="owner">Owner of {data.StoreName}</span>
