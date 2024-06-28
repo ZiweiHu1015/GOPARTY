@@ -39,15 +39,16 @@ export const deleteUser = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  try {
-      const { username, email, location } = req.body; // Assuming these are the fields you allow to update
-      const result = await updateUserById(req.params.id, { username, email, location });
-      if (result === 0) {
-          return next(createError(404, "User not found"));
-      }
-
-      res.status(200).send("User updated successfully");
-  } catch (error) {
-      next(createError(500, "Server error"));
-  }
-};
+    try {
+        const { FirstName, LastName, Location, PhoneNumber, ProfilePicture, ShippingAddress } = req.body; 
+        const updates = { FirstName, LastName, Location, PhoneNumber, ProfilePicture, ShippingAddress };
+  
+        const result = await updateUserById(req.params.id, updates);
+        if (result === 0) {
+            return next(createError(404, "User not found"));
+        }
+        res.status(200).send("User updated successfully");
+    } catch (error) {
+        next(createError(500, "Server error"));
+    }
+  };

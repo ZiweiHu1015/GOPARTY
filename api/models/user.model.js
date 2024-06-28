@@ -33,7 +33,8 @@ export const getUserById = async (id) => {
         s.MainService, 
         s.ServiceDays, 
         s.ServiceArea, 
-        s.ServiceType
+        s.ServiceType,
+        s.StoreRating
       FROM 
         Users u
         JOIN Sellers s ON u.UserID = s.UserID
@@ -56,11 +57,47 @@ export const deleteUserById = async (id) => {
 };
 
 export const updateUserById = async (id, updates) => {
-    const { username, email, location } = updates;
-    const sql = `UPDATE Users SET username = ?, email = ?, location = ? WHERE UserID = ?`;
-    const [result] = await db.execute(sql, [username, email, location, id]);
-    return result.affectedRows;
+  const { FirstName, LastName, Location, PhoneNumber, ProfilePicture, ShippingAddress } = updates;
+
+  const fieldsToUpdate = [];
+  const values = [];
+
+  if (FirstName !== undefined) {
+      fieldsToUpdate.push("FirstName = ?");
+      values.push(FirstName);
+  }
+  if (LastName !== undefined) {
+      fieldsToUpdate.push("LastName = ?");
+      values.push(LastName);
+  }
+  if (Location !== undefined) {
+      fieldsToUpdate.push("Location = ?");
+      values.push(Location);
+  }
+  if (PhoneNumber !== undefined) {
+      fieldsToUpdate.push("PhoneNumber = ?");
+      values.push(PhoneNumber);
+  }
+  if (ProfilePicture !== undefined) {
+      fieldsToUpdate.push("ProfilePicture = ?");
+      values.push(ProfilePicture);
+  }
+  if (ShippingAddress !== undefined) {
+      fieldsToUpdate.push("ShippingAddress = ?");
+      values.push(ShippingAddress);
+  }
+
+  if (fieldsToUpdate.length === 0) {
+      throw new Error("No fields to update");
+  }
+
+  values.push(id);
+  const sql = `UPDATE Users SET ${fieldsToUpdate.join(", ")} WHERE UserID = ?`;
+
+  const [result] = await db.execute(sql, values);
+  return result.affectedRows;
 };
+
 
 export const getUserByUsername = async (username) => {
   const sql = `SELECT * FROM Users WHERE username = ?`;
