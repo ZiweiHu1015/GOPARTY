@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Listing.scss";
 import { Slider } from "infinite-react-carousel/lib";
 import { Link, useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ function Listing() {
   const [personalizationText, setPersonalizationText] = useState("");
   const [savedText, setSavedText] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
+  const [price, setPrice] = useState(0); // Changed to price to hold the current price
   const [selectedDate, setSelectedDate] = useState(null);
 
   const { isLoading, error, data } = useQuery({
@@ -22,25 +23,33 @@ function Listing() {
       const url = `/listing/${id}`;
       try {
         const res = await newRequest.get(url);
-        console.log("res.data:", res.data);
         return res.data;
       } catch (err) {
         console.error("Error fetching listing:", err.response ? err.response.data : err.message); // Debug message
         throw err;
-      } 
+      }
     },
   });
 
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value); 
-  };
+  useEffect(() => {
+    if (data && data.Price) {
+      setPrice(data.Price); 
+    }
+  }, [data]);
 
+  const handleOptionChange = (event) => {
+    const selectedOptionName = event.target.value;
+    const selectedOption = data.Options.find(option => option.Name === selectedOptionName);
+    setSelectedOption(selectedOptionName);
+    setPrice(selectedOption.Price); 
+    console.log("Selected option:", selectedOptionName, "Price:", selectedOption.Price); // Debug message
+  };
 
   const handleConfirmOrder = () => {
     const orderDetails = {
       seller: data.Username,
       title: data.Title,
-      price: data.Price,
+      price: price, // Use updated price
       image: data.Images[0],
       selectedOption: selectedOption,
       selectedDate: selectedDate,
@@ -48,8 +57,10 @@ function Listing() {
       deliveryType: data.DeliveryType,
       availableStartDate: data.AvailableStartDate,
       availableEndDate: data.AvailableEndDate,
-      unavailableDates: data.UnavailableDates
+      unavailableDates: data.UnavailableDates,
+      options: data.Options // Save options here
     };
+    console.log("Order details to save:", orderDetails); // Debug message
     localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
     window.location.href = `/pay/${data.ProductID}`;
   };
@@ -60,7 +71,6 @@ function Listing() {
       setPersonalizationText(""); // Clear the input box
     }
   };
-
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -104,7 +114,6 @@ function Listing() {
       ) : error ? (
         "Something went wrong!"
       ) : (
-        
         <div className="container">
           <div className="left">
             <span className="breadcrumbs">
@@ -124,31 +133,30 @@ function Listing() {
           <div className="right">
             <div className="price">
               <h3><strong>{data.Title}</strong></h3>
-              <h2><strong>${data.Price}</strong></h2>
+              <h2><strong>${price}</strong></h2> {/* Display updated price */}
             </div>
 
-            <div className = "option">
-            <label htmlFor="optionSelect" className="options-label">Options:</label>
-            <select 
-              id="optionSelect" 
-              value={selectedOption} 
-              onChange={handleOptionChange} 
-              className="options-dropdown" 
-            >
-              <option value="" disabled>Select an option</option> 
-              {data.Options && data.Options.length > 0 ? (
-                data.Options.map((option, index) => (
-                  <option key={index} value={option.name}>
-                    {option.name} (${option.price})
-                  </option>
-                ))
-              ) : (
-                <option value="no-options" disabled>No options available</option>
-              )}
-            </select>
-           </div>
+            <div className="option">
+              <label htmlFor="optionSelect" className="options-label">Options:</label>
+              <select 
+                id="optionSelect" 
+                value={selectedOption} 
+                onChange={handleOptionChange} 
+                className="options-dropdown" 
+              >
+                <option value="" disabled>Select an option</option> 
+                {data.Options && data.Options.length > 0 ? (
+                  data.Options.map((option, index) => (
+                    <option key={index} value={option.Name}>
+                      {option.Name} (${option.Price})
+                    </option>
+                  ))
+                ) : (
+                  <option value="no-options" disabled>No options available</option>
+                )}
+              </select>
+            </div>
 
-   
            <div className="chooseDate">
             <label htmlFor="datePicker" className="date-picker-label">Choose your Date:</label>
             <DatePicker
@@ -183,13 +191,11 @@ function Listing() {
             
 
             <div className="detail-item">
-            <label className="detail-label">Delivery Type:</label>
-            <strong>{"    "+ data.DeliveryType}</strong>
-          </div>
+              <label className="detail-label">Delivery Type:</label>
+              <strong>{"    "+ data.DeliveryType}</strong>
+            </div>
 
-
-
-            <div className = "pay">
+            <div className="pay">
               <Link to={`/pay/${data.ProductID}`}>
                <button onClick={handleConfirmOrder}>Confirm Order</button>
               </Link>
@@ -198,7 +204,7 @@ function Listing() {
             <div className="seller">
               <p>Meet your seller</p>
               <div className="seller-info">
-              <Link to={`/storeProfile/${data.SellerID}`}>
+                <Link to={`/storeProfile/${data.SellerID}`}>
                   <img
                     className="pp"
                     src={data.ProfilePicture || "/img/userProfile.jpg"}
@@ -214,7 +220,6 @@ function Listing() {
               </div>
               
               <div className="box">
-              
                 <button className="message-button">Contact Seller</button>
                 <hr />
                 <p>{data.StoreDescription}</p>
