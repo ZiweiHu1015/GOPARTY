@@ -19,8 +19,8 @@ export const createListing = async (listingData) => {
     } = listingData;
     
     const sql = `INSERT INTO Listings 
-                    (SellerID, Title, Description, Category, Price, CoverImage, AvailableStartDate, AvailableEndDate, DeliveryType, PersonalizationOptions, Images, Options, UnavailableDates)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    (SellerID, Title, Description, Category, Price, CoverImage, AvailableStartDate, AvailableEndDate, DeliveryType, PersonalizationOptions, Images, UnavailableDates)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         userId,
@@ -34,7 +34,7 @@ export const createListing = async (listingData) => {
         deliveryType ,
         personalizationOptions || null,
         images ? JSON.stringify(images) : null,
-        JSON.stringify(options),
+       // JSON.stringify(options),
         unavailableDates ? JSON.stringify(unavailableDates) : '[]'
     ];
 
@@ -43,16 +43,50 @@ export const createListing = async (listingData) => {
     const [result] = await db.execute(sql, values);
     try {
         const [result] = await db.execute(sql, values);
-        console.log("Insert result:", result); // Debug message
-        return result.insertId;
+        const listingId = result.insertId; // Changed: store the insertId of the listing
+
+        if (options && options.length > 0) { // Changed: check if options are provided
+            const optionPromises = options.map(option => { // Changed: iterate over options
+                const optionSql = `INSERT INTO Options (ListingID, Name, Price) VALUES (?, ?, ?)`; // Changed: SQL for inserting options
+                return db.execute(optionSql, [listingId, option.name, option.price]); // Changed: execute the SQL for each option
+            });
+            await Promise.all(optionPromises); // Changed: wait for all option insertions to complete
+        }
+
+        return listingId;
     } catch (error) {
         console.error("Error executing SQL:", error); // Debug message
         throw error;
     }
 };
 
+// export const getListingById = async (listingId) => {
+//     const sql = ` SELECT 
+//             l.*, 
+//             u.FirstName, 
+//             u.ProfilePicture,
+//             YEAR(u.CreatedAt) AS MemberSince,
+//             s.StoreName,
+//             s.StoreDescription,
+//             s.MainService,
+//             s.ServiceDays,
+//             s.ServiceArea,
+//             s.ServiceType
+//         FROM 
+//             Listings l
+//         JOIN 
+//             Users u ON l.SellerID = u.UserID
+//         JOIN 
+//             Sellers s ON l.SellerID = s.UserID
+//         WHERE 
+//             l.ProductID = ?`;
+//     const [rows] = await db.query(sql, [listingId]);
+//     return rows[0];
+// };
 export const getListingById = async (listingId) => {
-    const sql = ` SELECT 
+    // Query to fetch listing details
+    const sql = `
+        SELECT 
             l.*, 
             u.FirstName, 
             u.ProfilePicture,
@@ -71,9 +105,41 @@ export const getListingById = async (listingId) => {
             Sellers s ON l.SellerID = s.UserID
         WHERE 
             l.ProductID = ?`;
-    const [rows] = await db.query(sql, [listingId]);
-    return rows[0];
+
+    // Query to fetch options based on ListingID
+    const optionsSql = `SELECT Name, Price FROM Options WHERE ListingID = ?`;
+
+    try {
+        console.log("Executing listing query with ProductID:", listingId);
+        // Fetch listing details
+        const [listingRows] = await db.query(sql, [listingId]);
+        console.log("Listing query result:", listingRows);
+
+        if (listingRows.length === 0) {
+            console.error(`Listing with ID ${listingId} not found`);
+            throw new Error(`Listing with ID ${listingId} not found`);
+        }
+
+        const listing = listingRows[0];
+
+        console.log("Executing options query with ListingID:", listingId);
+        // Fetch options
+        const [optionRows] = await db.query(optionsSql, [listingId]);
+        console.log("Options query result:", optionRows);
+
+        // Combine listing details and options
+        listing.Options = optionRows;
+
+        console.log("Final listing object:", listing);
+        return listing;
+    } catch (error) {
+        console.error("Error fetching listing:", error);
+        throw error;
+    }
 };
+
+
+
 
 export const deleteListingById = async (listingId) => {
     const sql = `DELETE FROM Listings WHERE ProductID  = ?`;
@@ -132,7 +198,6 @@ export const updateListingById = async (listingId, updates) => {
   const [result] = await db.execute(sql, values);
   return result.affectedRows;
 };
-
 export const getListingsBySellerId = async (sellerId) => {
     try {
         const sql = `
@@ -141,7 +206,7 @@ export const getListingsBySellerId = async (sellerId) => {
             JOIN Users U ON L.SellerID = U.UserID
             WHERE U.UserID = ? AND U.isSeller = TRUE
         `;
-        const [rows] = await db.query(sql, [sellerId]);
+        const [rows] = await db.query(sql, [sellerId]);   
         rows.forEach(row => {
             try {
                 if (typeof row.Images === 'string' && row.Images.startsWith('[')) {
