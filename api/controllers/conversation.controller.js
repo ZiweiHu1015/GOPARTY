@@ -70,8 +70,6 @@ export const getConversations = async (req, res, next) => {
   
   try {
     const [rows] = await db.query(sql, [userId]);
-    // 
-    console.log("[rows]:", rows);
     res.status(200).send(rows);
   } catch (err) {
     console.error("Error retrieving conversations:", err);

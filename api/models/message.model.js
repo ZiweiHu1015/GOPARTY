@@ -21,12 +21,15 @@ export const getMessagesByConversationId = async (conversationId) => {
   const sql = `SELECT * FROM Messages WHERE ConversationID = ? ORDER BY CreatedAt ASC`;
   try {
       const [rows] = await db.query(sql, [conversationId]);
+      console.log("[rows]", rows);
       return rows; // returns an array of messages
   } catch (error) {
       console.error("Error retrieving messages by conversation ID:", error);
       throw error; // rethrow the error to be handled in the controller
   }
 };
+
+
 // Update conversation
 export const updateConversation = async (conversationId, updates) => {
   try {

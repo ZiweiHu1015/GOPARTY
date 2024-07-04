@@ -11,12 +11,12 @@ const Message = () => {
     const queryClient = useQueryClient();
   
     const otherUser = location.state?.otherUser;
-    console.log("otherUser", otherUser);
     
     const { isLoading, error, data } = useQuery({
         queryKey: ["messages", id], // Include the conversation ID in the query key
         queryFn: () =>
           newRequest.get(`/messages/${id}`).then((res) => {
+            console.log("data", res.data);
             return res.data;
           }),
       });
@@ -52,13 +52,13 @@ const Message = () => {
         ) : (
           <div className="messages">
             {data.map((m) => (
-              <div className={m.userId === currentUser._id ? "owner item" : "item"} key={m._id}>
+              <div className={m.userID === currentUser.userID ? "owner item" : "item"} key={m.MessageID}>
                 <img
-                  src={m.userId === currentUser._id ?  (currentUser.img || '../img/placeholder.jpg') : 
+                  src={m.userID === currentUser.userID ? (currentUser.img || '../img/placeholder.jpg') : 
                   (otherUser.img || '../img/placeholder.jpg')}
-                  alt={m.userId === currentUser._id ? "You" : "Other User"}
+                  alt={m.userID === currentUser.userID ? "You" : "Other User"}
                 />
-                <p>{m.desc}</p>
+                <p>{m.Description}</p>
               </div>
             ))}
           </div>
