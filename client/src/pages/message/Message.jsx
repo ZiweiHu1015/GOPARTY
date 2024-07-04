@@ -11,6 +11,7 @@ const Message = () => {
     const queryClient = useQueryClient();
   
     const otherUser = location.state?.otherUser;
+    console.log("otherUser", otherUser);
     
     const { isLoading, error, data } = useQuery({
         queryKey: ["messages", id], // Include the conversation ID in the query key
@@ -42,7 +43,7 @@ const Message = () => {
     <div className="message">
       <div className="container">
         <span className="breadcrumbs">
-          <Link to="/messages">Messages</Link> {">"} {otherUser?.username || 'Loading...'}
+          <Link to="/messages">Messages</Link> {">"} {otherUser?.Username || 'Loading...'}
         </span>
         {isLoading ? (
           "loading"

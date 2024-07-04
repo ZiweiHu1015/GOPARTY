@@ -15,14 +15,14 @@ const Messages = () => {
     queryFn: async () => {
       try {
         const res = await newRequest.get('/conversations');
-        // data
-        console.log("Data:", res.data);
         const conversations = res.data;
         await Promise.all(conversations.map(async (conversation) => {
           const otherUserId = currentUser.isSeller ? conversation.buyerId : conversation.sellerId;
-          // const userDetails = await newRequest.get(`/users/${otherUserId}`);
-          // conversation.otherUser = userDetails.data;
+          const userDetails = await newRequest.get(`/users/${otherUserId}`);
+          conversation.otherUser = userDetails.data;
         }));
+        // data
+        console.log("conversations:", conversations);
         return conversations;
       } catch (error) {
         console.error("Failed to fetch conversations or user details", error);
@@ -70,29 +70,32 @@ const Messages = () => {
             <tbody>
               {data.map((c) => (
                 <tr
-                className={
-                  (currentUser.isSeller && !c.readBySeller) ||
-                  (!currentUser.isSeller && !c.readByBuyer)
-                    ? 'active'
-                    : undefined // This ensures that the className is not set to a boolean
-                }
-                key={c.id}
-              >
+                  className={
+                    (currentUser.isSeller && !c.readBySeller) ||
+                    (!currentUser.isSeller && !c.readByBuyer)
+                      ? 'active'
+                      : undefined // This ensures that the className is not set to a boolean
+                  }
+                  key={c.ConversationID}
+                >
                   <td>{currentUser.isSeller ? c.buyerId : c.sellerId}</td>
+
                   <td>
                   <Link 
-                    to={`/message/${c.id}`} 
+                    to={`/message/${c.ConversationID}`} 
                     className="link"
                     state={{ otherUser: c.otherUser }} // Pass the entire user object
                   >
                     {c?.lastMessage?.substring(0, 100)}...
                   </Link>
                   </td>
+
                   <td>{moment(c.updatedAt).fromNow()}</td>
+
                   <td>
                     {((currentUser.isSeller && !c.readBySeller) ||
                       (!currentUser.isSeller && !c.readByBuyer)) && (
-                      <button onClick={() => handleRead(c.id)}>
+                      <button onClick={() => handleRead(c.ConversationID)}>
                         Mark as Read
                       </button>
                     )}
