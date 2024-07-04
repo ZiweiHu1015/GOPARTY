@@ -6,7 +6,7 @@ import "./Messages.scss";
 import moment from "moment";
 
 const Messages = () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = JSON.parse(localStorage.getItem("currentUser")).user;
 
   const queryClient = useQueryClient();
 
@@ -20,8 +20,8 @@ const Messages = () => {
         const conversations = res.data;
         await Promise.all(conversations.map(async (conversation) => {
           const otherUserId = currentUser.isSeller ? conversation.buyerId : conversation.sellerId;
-          const userDetails = await newRequest.get(`/users/${otherUserId}`);
-          conversation.otherUser = userDetails.data;
+          // const userDetails = await newRequest.get(`/users/${otherUserId}`);
+          // conversation.otherUser = userDetails.data;
         }));
         return conversations;
       } catch (error) {
@@ -61,7 +61,7 @@ const Messages = () => {
           <table>
             <thead>
               <tr>
-                <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
+                <th>{currentUser.isSeller === 1 ? "Buyer" : "Seller"}</th>
                 <th>Last Message</th>
                 <th>Date</th>
                 <th>Action</th>

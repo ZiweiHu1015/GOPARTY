@@ -63,11 +63,15 @@ export const getSingleConversation = async (req, res, next) => {
 export const getConversations = async (req, res, next) => {
   const userId = req.userId;
   const userColumn = req.isSeller ? 'sellerId' : 'buyerId';
-
+  // 
+  console.log("userColumn: userId:", userColumn, userId);
+  
   const sql = `SELECT * FROM Conversations WHERE ${userColumn} = ? ORDER BY updatedAt DESC`;
-
+  
   try {
     const [rows] = await db.query(sql, [userId]);
+    // 
+    console.log("[rows]:", rows);
     res.status(200).send(rows);
   } catch (err) {
     console.error("Error retrieving conversations:", err);
