@@ -12,17 +12,27 @@ const Messages = () => {
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["conversations"],
-    queryFn: () =>
-      newRequest.get('/conversations').then(async (res) => {
+    queryFn: async () => {
+      try {
+        const res = await newRequest.get('/conversations');
+        // data
+        console.log("Data:", res.data);
         const conversations = res.data;
         await Promise.all(conversations.map(async (conversation) => {
           const otherUserId = currentUser.isSeller ? conversation.buyerId : conversation.sellerId;
-          const userDetails = await newRequest.get(`/users/${otherUserId}`); // Fetch each user's details
-          conversation.otherUser = userDetails.data; // Assuming `data` holds the necessary user details
+          const userDetails = await newRequest.get(`/users/${otherUserId}`);
+          conversation.otherUser = userDetails.data;
         }));
         return conversations;
-      }),
-  });
+      } catch (error) {
+        console.error("Failed to fetch conversations or user details", error);
+        throw new Error("Failed to fetch data");
+      }
+    },
+    onError: (err) => {
+      console.error("Query error:", err.message);
+    }
+  });  
 
   const mutation = useMutation({
     mutationFn: (id) => {
@@ -49,43 +59,47 @@ const Messages = () => {
             <h1>Messages</h1>
           </div>
           <table>
-            <tr>
-              <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
-              <th>Last Message</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-            {data.map((c) => (
-              <tr
-              className={
-                (currentUser.isSeller && !c.readBySeller) ||
-                (!currentUser.isSeller && !c.readByBuyer)
-                  ? 'active'
-                  : undefined // This ensures that the className is not set to a boolean
-              }
-              key={c.id}
-            >
-                <td>{currentUser.isSeller ? c.buyerId : c.sellerId}</td>
-                <td>
-                <Link 
-                  to={`/message/${c.id}`} 
-                  className="link"
-                  state={{ otherUser: c.otherUser }} // Pass the entire user object
-                >
-                  {c?.lastMessage?.substring(0, 100)}...
-                </Link>
-                </td>
-                <td>{moment(c.updatedAt).fromNow()}</td>
-                <td>
-                  {((currentUser.isSeller && !c.readBySeller) ||
-                    (!currentUser.isSeller && !c.readByBuyer)) && (
-                    <button onClick={() => handleRead(c.id)}>
-                      Mark as Read
-                    </button>
-                  )}
-                </td>
+            <thead>
+              <tr>
+                <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
+                <th>Last Message</th>
+                <th>Date</th>
+                <th>Action</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {data.map((c) => (
+                <tr
+                className={
+                  (currentUser.isSeller && !c.readBySeller) ||
+                  (!currentUser.isSeller && !c.readByBuyer)
+                    ? 'active'
+                    : undefined // This ensures that the className is not set to a boolean
+                }
+                key={c.id}
+              >
+                  <td>{currentUser.isSeller ? c.buyerId : c.sellerId}</td>
+                  <td>
+                  <Link 
+                    to={`/message/${c.id}`} 
+                    className="link"
+                    state={{ otherUser: c.otherUser }} // Pass the entire user object
+                  >
+                    {c?.lastMessage?.substring(0, 100)}...
+                  </Link>
+                  </td>
+                  <td>{moment(c.updatedAt).fromNow()}</td>
+                  <td>
+                    {((currentUser.isSeller && !c.readBySeller) ||
+                      (!currentUser.isSeller && !c.readByBuyer)) && (
+                      <button onClick={() => handleRead(c.id)}>
+                        Mark as Read
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       )}
