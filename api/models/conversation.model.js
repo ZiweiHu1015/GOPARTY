@@ -1,6 +1,7 @@
 import createError from "../utils/createError.js";
 import db from '../database.js'; // Import your configured database connection
 
+// function: create new conversation
 export const createConversation = async (req, res, next) => {
   const { userId, body: { to }, isSeller } = req;
   const sellerId = isSeller ? userId : to;
@@ -20,6 +21,7 @@ export const createConversation = async (req, res, next) => {
   }
 };
 
+// function: create new conversation
 export const updateConversation = async (req, res, next) => {
   const { id } = req.params;
   const readBySeller = req.isSeller;
