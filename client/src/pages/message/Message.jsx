@@ -7,7 +7,9 @@ import "./Message.scss";
 const Message = () => {
     const { id } = useParams();
     const location = useLocation();
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser = JSON.parse(localStorage.getItem("currentUser")).user;
+    // console.log("currentUser", currentUser);
+    // console.log("currentUser.userID", currentUser.UserID);
     const queryClient = useQueryClient();
   
     const otherUser = location.state?.otherUser;
@@ -44,6 +46,7 @@ const Message = () => {
       <div className="container">
         <span className="breadcrumbs">
           <Link to="/messages">Messages</Link> {">"} {otherUser?.Username || 'Loading...'}
+          <hr />
         </span>
         {isLoading ? (
           "loading"
@@ -52,11 +55,11 @@ const Message = () => {
         ) : (
           <div className="messages">
             {data.map((m) => (
-              <div className={m.userID === currentUser.userID ? "owner item" : "item"} key={m.MessageID}>
+              <div className={m.UserID === currentUser.UserID ? "owner item" : "item"} key={m.MessageID}>
                 <img
-                  src={m.userID === currentUser.userID ? (currentUser.img || '../img/placeholder.jpg') : 
+                  src={m.UserID === currentUser.UserID ? (currentUser.img || '../img/placeholder.jpg') : 
                   (otherUser.img || '../img/placeholder.jpg')}
-                  alt={m.userID === currentUser.userID ? "You" : "Other User"}
+                  alt={m.UserID === currentUser.UserID ? "You" : "Other User"}
                 />
                 <p>{m.Description}</p>
               </div>
