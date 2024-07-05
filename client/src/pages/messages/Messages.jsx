@@ -36,7 +36,7 @@ const Messages = () => {
 
   const mutation = useMutation({
     mutationFn: (id) => {
-      return newRequest.put(`/conversations/${id}`);
+      return newRequest.put(`/conversations/isRead/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["conversations"]);

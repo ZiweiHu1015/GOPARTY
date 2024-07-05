@@ -1,76 +1,44 @@
-import createError from "../utils/createError.js";
 import db from '../database.js'; // Import your configured database connection
 
-// function: create new conversation
-export const createConversation = async (req, res, next) => {
-  const { userId, body: { to }, isSeller } = req;
-  const sellerId = isSeller ? userId : to;
-  const buyerId = isSeller ? to : userId;
-  
-  const sql = `
-    INSERT INTO Conversations (sellerId, buyerId, readBySeller, readByBuyer)
-    VALUES (?, ?, ?, ?)
-  `;
-  
-  try {
+export const insertConversation = async (sellerId, buyerId, isSeller) => {
+    const sql = `
+        INSERT INTO Conversations (sellerId, buyerId, readBySeller, readByBuyer)
+        VALUES (?, ?, ?, ?)
+    `;
     const [result] = await db.execute(sql, [sellerId, buyerId, isSeller, !isSeller]);
-    res.status(201).send({ id: result.insertId, sellerId, buyerId, readBySeller: isSeller, readByBuyer: !isSeller });
-  } catch (err) {
-    console.error("Error creating conversation:", err);
-    next(createError(500, "Server error while creating conversation"));
-  }
+    return result;
 };
 
-// function: create new conversation
-export const updateConversation = async (req, res, next) => {
-  const { id } = req.params;
-  const readBySeller = req.isSeller;
-  const readByBuyer = !req.isSeller;
-
-  const sql = `
-    UPDATE Conversations
-    SET readBySeller = ?, readByBuyer = ?
-    WHERE ConversationID = ?
-  `;
-
-  try {
-    const [result] = await db.execute(sql, [readBySeller, readByBuyer, id]);
-    if (result.affectedRows === 0) {
-      return next(createError(404, "Conversation not found"));
-    }
-    res.status(200).send({ message: 'Conversation updated successfully' });
-  } catch (err) {
-    console.error("Error updating conversation:", err);
-    next(createError(500, "Server error while updating conversation"));
-  }
+export const updateConversationIsReadStatus = async (conversationId, isSeller) => {
+    const sql = `
+        UPDATE Conversations
+        SET readBySeller = IF(? = 1, TRUE, readBySeller), 
+            readByBuyer = IF(? = 0, TRUE, readByBuyer)
+        WHERE ConversationID = ?
+    `;
+    const [result] = await db.execute(sql, [isSeller, isSeller, conversationId]);
+    return result;
 };
 
-export const getSingleConversation = async (req, res, next) => {
-  const { id } = req.params;
 
-  const sql = `SELECT * FROM Conversations WHERE ConversationID = ?`;
+// export const updateConversationLastMessageStatus = async (conversationId, isSeller) => {
+//     const sql = `
+//         UPDATE Conversations
+//         SET readBySeller = ?, readByBuyer = ?
+//         WHERE ConversationID = ?
+//     `;
+//     const [result] = await db.execute(sql, [isSeller, !isSeller, conversationId]);
+//     return result;
+// };
 
-  try {
-    const [rows] = await db.query(sql, [id]);
-    if (rows.length === 0) return next(createError(404, "Conversation not found"));
-    res.status(200).send(rows[0]);
-  } catch (err) {
-    console.error("Error retrieving conversation:", err);
-    next(createError(500, "Server error while retrieving conversation"));
-  }
+export const findConversationById = async (conversationId) => {
+    const sql = `SELECT * FROM Conversations WHERE ConversationID = ?`;
+    const [rows] = await db.query(sql, [conversationId]);
+    return rows.length ? rows[0] : null;
 };
 
-export const getConversations = async (req, res, next) => {
-  const userId = req.userId;
-  const userColumn = req.isSeller ? 'sellerId' : 'buyerId';
-
-  const sql = `SELECT * FROM Conversations WHERE ${userColumn} = ? ORDER BY updatedAt DESC`;
-
-  try {
+export const findAllConversationsByUser = async (userId, userColumn) => {
+    const sql = `SELECT * FROM Conversations WHERE ${userColumn} = ? ORDER BY updatedAt DESC`;
     const [rows] = await db.query(sql, [userId]);
-    res.status(200).send(rows);
-  } catch (err) {
-    console.error("Error retrieving conversations:", err);
-    next(createError(500, "Server error while retrieving conversations"));
-  }
+    return rows;
 };
