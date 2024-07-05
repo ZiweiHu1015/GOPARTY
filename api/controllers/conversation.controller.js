@@ -32,21 +32,21 @@ export const updateConversationIsRead = async (req, res, next) => {
 };
 
 
-// export const updateConversationLastMessage = async (req, res, next) => {
-//   const { id } = req.params;
-//   const readBySeller = req.isSeller;
+export const updateConversationLastMessage = async (req, res, next) => {
+  const { id } = req.params;
+  const { lastMessage } = req.body; 
   
-//   try {
-//       const result = await ConversationModel.updateConversationStatus(id, readBySeller);
-//       if (result.affectedRows === 0) {
-//           return next(createError(404, "Conversation not found"));
-//       }
-//       res.status(200).send({ message: 'Conversation updated successfully' });
-//   } catch (err) {
-//       console.error("Error updating conversation:", err);
-//       next(createError(500, "Server error while updating conversation"));
-//   }
-// };
+  try {
+      const result = await ConversationModel.updateConversationLastMessageStatus(id, lastMessage);
+      if (result.affectedRows === 0) {
+          return next(createError(404, "Conversation not found"));
+      }
+      res.status(200).send({ message: 'Conversation updated successfully' });
+  } catch (err) {
+      console.error("Error updating conversation:", err);
+      next(createError(500, "Server error while updating conversation"));
+  }
+};
 
 export const getSingleConversation = async (req, res, next) => {
     const { id } = req.params;

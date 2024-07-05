@@ -8,8 +8,6 @@ const Message = () => {
     const { id } = useParams();
     const location = useLocation();
     const currentUser = JSON.parse(localStorage.getItem("currentUser")).user;
-    // console.log("currentUser", currentUser);
-    // console.log("currentUser.userID", currentUser.UserID);
     const queryClient = useQueryClient();
   
     const otherUser = location.state?.otherUser;
@@ -17,28 +15,31 @@ const Message = () => {
     const { isLoading, error, data } = useQuery({
         queryKey: ["messages", id], // Include the conversation ID in the query key
         queryFn: () =>
-          newRequest.get(`/messages/${id}`).then((res) => {
-            console.log("data", res.data);
-            return res.data;
-          }),
+          newRequest.get(`/messages/${id}`).then((res) => res.data),
       });
 
   const mutation = useMutation({
-    mutationFn: (message) => {
-      return newRequest.post(`/messages`, message);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["messages"]);
-    },
+    mutationFn: (message) => newRequest.post(`/messages`, message),
+    onSuccess: (data, variables) => {
+      newRequest.put(`/conversations/lastMessage/${id}`, {
+        lastMessage: variables.desc
+      }).then(() => {
+        queryClient.invalidateQueries(["messages"]);
+      }).catch(error => {
+        console.error("Error updating last message:", error);
+      });
+    }
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const messageDesc = e.target[0].value;
+    e.target[0].value = "";
+
     mutation.mutate({
       conversationId: id,
-      desc: e.target[0].value,
+      desc: messageDesc,
     });
-    e.target[0].value = "";
   };
 
   return (
