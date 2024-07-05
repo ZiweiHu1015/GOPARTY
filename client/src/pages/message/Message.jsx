@@ -57,12 +57,20 @@ const Message = () => {
           <div className="messages">
             {data.map((m) => (
               <div className={m.UserID === currentUser.UserID ? "owner item" : "item"} key={m.MessageID}>
-                <img
-                  src={m.UserID === currentUser.UserID ? (currentUser.img || '../img/placeholder.jpg') : 
-                  (otherUser.img || '../img/placeholder.jpg')}
-                  alt={m.UserID === currentUser.UserID ? "You" : "Other User"}
-                />
-                <p>{m.Description}</p>
+                <div className="avatar">
+                  <img
+                    src={m.UserID === currentUser.UserID ? (currentUser.img || '../img/placeholder.jpg') : 
+                    (otherUser.img || '../img/placeholder.jpg')}
+                    alt={m.UserID === currentUser.UserID ? "You" : "Other User"}
+                  />
+                </div>
+                
+                {/* <p>{m.Description}</p> */}
+                {m.Description.startsWith('http') ? (
+                  <img src={m.Description} alt="Uploaded Content" />
+                  ) : (
+                  <p>{m.Description}</p>
+                )}
               </div>
             ))}
           </div>

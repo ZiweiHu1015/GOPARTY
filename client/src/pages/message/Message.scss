@@ -36,11 +36,18 @@
           }
         }
 
+        .avatar {     
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
         img {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
+          max-width: 400px;
+          max-height: 400px;
         }
 
         p {
@@ -61,7 +68,7 @@
     }
 
     .write {
-      display: flex;
+      // display: flex;
       align-items: center;
       justify-content: space-between;
 
@@ -74,14 +81,18 @@
       }
 
       button{
+        float: right;
+        width: 100px;
         background-color: #1dbf73;
-        padding: 20px;
         color: white;
-        font-weight: 500;
         border: none;
         border-radius: 10px;
+
+        padding: 20px;
+        margin: 15px;
+        font-weight: 500;
+        font-size: 20px;
         cursor: pointer;
-        width: 100px;
       }
     }
   }
