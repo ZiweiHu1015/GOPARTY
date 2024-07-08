@@ -33,20 +33,24 @@ export const updateConversationIsRead = async (req, res, next) => {
 
 
 export const updateConversationLastMessage = async (req, res, next) => {
-  const { id } = req.params;
-  const { lastMessage } = req.body; 
+    const { id } = req.params;
+    let { lastMessage } = req.body; 
+    if (/\.(jpg|jpeg|png|gif)$/i.test(lastMessage.toLowerCase())) {
+      lastMessage = '[photo]';
+    }
+    
+    try {
+        const result = await ConversationModel.updateConversationLastMessageStatus(id, lastMessage);
+        if (result.affectedRows === 0) {
+            return next(createError(404, "Conversation not found"));
+        }
+        res.status(200).send({ message: 'Conversation updated successfully' });
+    } catch (err) {
+        console.error("Error updating conversation:", err);
+        next(createError(500, "Server error while updating conversation"));
+    }
+  };
   
-  try {
-      const result = await ConversationModel.updateConversationLastMessageStatus(id, lastMessage);
-      if (result.affectedRows === 0) {
-          return next(createError(404, "Conversation not found"));
-      }
-      res.status(200).send({ message: 'Conversation updated successfully' });
-  } catch (err) {
-      console.error("Error updating conversation:", err);
-      next(createError(500, "Server error while updating conversation"));
-  }
-};
 
 export const getSingleConversation = async (req, res, next) => {
     const { id } = req.params;

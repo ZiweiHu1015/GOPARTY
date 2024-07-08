@@ -86,7 +86,7 @@ const Messages = () => {
                     className="link"
                     state={{ otherUser: c.otherUser }} // Pass the entire user object
                   >
-                    {c?.lastMessage?.substring(0, 100)}...
+                    {c?.lastMessage?.substring(0, 100)}
                   </Link>
                   </td>
 

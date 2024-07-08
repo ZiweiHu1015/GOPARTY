@@ -68,32 +68,37 @@
     }
 
     .write {
-      // display: flex;
-      align-items: center;
-      justify-content: space-between;
-
+      display: flex;
+      flex-direction: column; /* 元素垂直排列 */
+      align-items: flex-end; /* 子元素靠右对齐 */
+      width: 100%; /* 确保占满可用宽度 */
+    
       textarea {
-        width: 80%;
+        width: 100%; /* 文本框宽度占满容器宽度 */
         height: 100px;
         padding: 10px;
+        margin-bottom: 10px; /* 与按钮组之间的间距 */
         border: 1px solid lightgray;
         border-radius: 10px;
       }
-
-      button{
-        float: right;
-        width: 100px;
+    
+      .button-container {
+        display: flex;
+        flex-direction: row; /* 按钮水平排列 */
+        gap: 10px; /* 按钮之间的间隙 */
+      }
+    
+      button {
         background-color: #1dbf73;
         color: white;
         border: none;
         border-radius: 10px;
-
-        padding: 20px;
-        margin: 15px;
-        font-weight: 500;
-        font-size: 20px;
+        padding: 15px 20px;
+        font-size: 16px;
         cursor: pointer;
       }
     }
+    
+    
   }
 }
