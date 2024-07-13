@@ -6,14 +6,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 
 function MyGigs() {
-  const currentUser = getCurrentUser();
+  const currentUser = getCurrentUser().user;
   const queryClient = useQueryClient();
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["myGigs"],
     queryFn: async () => {
       try {
-        const response = await newRequest.get(`/listing?sellerId=${currentUser.user.UserID}`);
+        const response = await newRequest.get(`/listing?sellerId=${currentUser.UserID}`);
         console.log(response.data);
         return response.data;
       } catch (error) {
