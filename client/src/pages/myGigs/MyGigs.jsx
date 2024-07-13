@@ -65,12 +65,12 @@ function MyGigs() {
           <tbody>
             {data && data.length > 0 ? (
               data.map((gig) => (
-                <tr key={gig._id}>
+                <tr key={gig.ProductID}>
                   <td>
-                    <img className="image" src={gig.cover} alt="" />
+                    <img className="image" src={gig.CoverImage} alt="" />
                   </td>
-                  <td>{gig.title}</td>
-                  <td>{gig.price}</td>
+                  <td>{gig.Title}</td>
+                  <td>{gig.Price}</td>
                   <td>{gig.sales}</td>
                   <td>
                     <img
