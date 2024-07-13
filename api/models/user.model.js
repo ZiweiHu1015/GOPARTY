@@ -8,8 +8,8 @@ export const createUser = async (userData) => {
     return result.insertId;
 };
 
+// seller check remove temporary
 export const getUserById = async (id) => {
-  // First, get the user information and check if the user is a seller
   const userSql = `SELECT * FROM Users WHERE UserID = ?`;
   const [userRows] = await db.query(userSql, [id]);
   const user = userRows[0];
@@ -19,34 +19,36 @@ export const getUserById = async (id) => {
   }
 
   // Check if the user is a seller
-  const isSeller = user.isSeller === 1; // Assuming 1 indicates a seller
+  // const isSeller = user.isSeller === 1; // Assuming 1 indicates a seller
 
-  if (isSeller) {
-    // If the user is a seller, join with the Sellers table and return combined data
-    const sellerSql = `
-      SELECT 
-        u.UserID, 
-        u.FirstName,
-        u.CreatedAt,
-        s.StoreName, 
-        s.StoreDescription, 
-        s.MainService, 
-        s.ServiceDays, 
-        s.ServiceArea, 
-        s.ServiceType,
-        s.StoreRating
-      FROM 
-        Users u
-        JOIN Sellers s ON u.UserID = s.UserID
-      WHERE 
-        u.UserID = ?;
-    `;
-    const [sellerRows] = await db.query(sellerSql, [id]);
-    return sellerRows[0];
-  } else {
-    // If the user is not a seller, return user information only
-    return user;
-  }
+  // if (isSeller) {
+  //   // If the user is a seller, join with the Sellers table and return combined data
+  //   const sellerSql = `
+  //     SELECT 
+  //       u.UserID, 
+  //       u.FirstName,
+  //       u.CreatedAt,
+  //       s.StoreName, 
+  //       s.StoreDescription, 
+  //       s.MainService, 
+  //       s.ServiceDays, 
+  //       s.ServiceArea, 
+  //       s.ServiceType,
+  //       s.StoreRating
+  //     FROM 
+  //       Users u
+  //       JOIN Sellers s ON u.UserID = s.UserID
+  //     WHERE 
+  //       u.UserID = ?;
+  //   `;
+  //   const [sellerRows] = await db.query(sellerSql, [id]);
+  //   return sellerRows[0];
+  // } else {
+  //   // If the user is not a seller, return user information only
+  //   return user;
+  // }
+
+  return user;
 };
 
 

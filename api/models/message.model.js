@@ -1,6 +1,6 @@
 import db from '../database.js'; // Import your database connection
 
-// Create a new message
+// function: create new message
 export const createMessage = async (messageData) => {
   const { conversationId, userId, desc } = messageData;
   const sql = `
@@ -16,24 +16,27 @@ export const createMessage = async (messageData) => {
   }
 };
 
-// Function to retrieve all messages for a specific conversation
+// function: get all messages in the conversation
 export const getMessagesByConversationId = async (conversationId) => {
   const sql = `SELECT * FROM Messages WHERE ConversationID = ? ORDER BY CreatedAt ASC`;
   try {
       const [rows] = await db.query(sql, [conversationId]);
+      // console.log("[rows]", rows);
       return rows; // returns an array of messages
   } catch (error) {
       console.error("Error retrieving messages by conversation ID:", error);
       throw error; // rethrow the error to be handled in the controller
   }
 };
-// Update conversation
+
+
+// function: update conversation time
 export const updateConversation = async (conversationId, updates) => {
   try {
     const { readBySeller, readByBuyer, lastMessage } = updates;
     const sql = `
       UPDATE Conversations 
-      SET readBySeller = ?, readByBuyer = ?, lastMessage = ?, UpdatedAt = NOW()
+      SET readBySeller = ?, readByBuyer = ?, UpdatedAt = NOW()
       WHERE ConversationID = ?
     `;
     const [result] = await db.execute(sql, [readBySeller, readByBuyer, lastMessage, conversationId]);

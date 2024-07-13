@@ -36,11 +36,18 @@
           }
         }
 
+        .avatar {     
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
         img {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
+          max-width: 400px;
+          max-height: 400px;
         }
 
         p {
@@ -62,27 +69,36 @@
 
     .write {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-
+      flex-direction: column; /* 元素垂直排列 */
+      align-items: flex-end; /* 子元素靠右对齐 */
+      width: 100%; /* 确保占满可用宽度 */
+    
       textarea {
-        width: 80%;
+        width: 100%; /* 文本框宽度占满容器宽度 */
         height: 100px;
         padding: 10px;
+        margin-bottom: 10px; /* 与按钮组之间的间距 */
         border: 1px solid lightgray;
         border-radius: 10px;
       }
-
-      button{
+    
+      .button-container {
+        display: flex;
+        flex-direction: row; /* 按钮水平排列 */
+        gap: 10px; /* 按钮之间的间隙 */
+      }
+    
+      button {
         background-color: #1dbf73;
-        padding: 20px;
         color: white;
-        font-weight: 500;
         border: none;
         border-radius: 10px;
+        padding: 15px 20px;
+        font-size: 16px;
         cursor: pointer;
-        width: 100px;
       }
     }
+    
+    
   }
 }

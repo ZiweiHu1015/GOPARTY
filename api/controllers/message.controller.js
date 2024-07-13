@@ -10,11 +10,11 @@ export const createMessage = async (req, res, next) => {
   const userId = req.userId;
 
   try {
-    let conversation = await modelGetConversationById(conversationId);
+    let conversation = await modelGetMessageByConversationId(conversationId);
 
     if (!conversation) {
       await modelCreateMessage(conversationId, userId); // Adjust this function to create conversation correctly
-      conversation = await modelGetConversationById(conversationId); // Optionally re-fetch
+      conversation = await modelGetMessageByConversationId(conversationId); // Optionally re-fetch
     }
 
     const messageData = {

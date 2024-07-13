@@ -6,14 +6,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 
 function MyGigs() {
-  const currentUser = getCurrentUser();
+  const currentUser = getCurrentUser().user;
   const queryClient = useQueryClient();
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["myGigs"],
     queryFn: async () => {
       try {
-        const response = await newRequest.get(`/listings?userId=${currentUser._id}`);
+        const response = await newRequest.get(`/listing?sellerId=${currentUser.UserID}`);
+        console.log(response.data);
         return response.data;
       } catch (error) {
         throw new Error("Failed to fetch data");
@@ -24,7 +25,7 @@ function MyGigs() {
 
   const mutation = useMutation({
     mutationFn: (id) => {
-      return newRequest.delete(`/listings/${id}`);
+      return newRequest.delete(`/listing/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);
@@ -39,7 +40,7 @@ function MyGigs() {
     <div className="myGigs">
     <div className="container">
       <div className="title">
-        <h1>Gigs</h1>
+        <h1>MyGigs</h1>
         {currentUser.isSeller && (
           <Link to="/add">
             <button>Add New Gig</button>
@@ -64,19 +65,17 @@ function MyGigs() {
           <tbody>
             {data && data.length > 0 ? (
               data.map((gig) => (
-                <tr key={gig._id}>
-                  <td>
-                    <img className="image" src={gig.cover} alt="" />
-                  </td>
-                  <td>{gig.title}</td>
-                  <td>{gig.price}</td>
+                <tr key={gig.ProductID}>
+                  <td><img className="image" src={gig.CoverImage} alt="" /></td>
+                  <td>{gig.Title}</td>
+                  <td>{gig.Price}</td>
                   <td>{gig.sales}</td>
                   <td>
                     <img
                       className="delete"
                       src="./img/delete.png"
                       alt=""
-                      onClick={() => handleDelete(gig._id)}
+                      onClick={() => handleDelete(gig.ProductID)}
                     />
                   </td>
                 </tr>

@@ -1,76 +1,81 @@
 import createError from "../utils/createError.js";
-import db from '../database.js'; // Import your configured database connection
+import * as ConversationModel from "../models/conversation.model.js";
 
-export const createConversation = async (req, res, next) => {// Log incoming request body
-
-  const { userId, body: { to }, isSeller } = req;
-  const sellerId = isSeller ? userId : to;
-  const buyerId = isSeller ? to : userId;
-  
-  const sql = `
-    INSERT INTO Conversations (sellerId, buyerId, readBySeller, readByBuyer)
-    VALUES (?, ?, ?, ?)
-  `;
-  
-  try {
-    const [result] = await db.execute(sql, [sellerId, buyerId, isSeller, !isSeller]);
+export const createConversation = async (req, res, next) => {
+    const { userId, body: { to }, isSeller } = req;
+    const sellerId = isSeller ? userId : to;
+    const buyerId = isSeller ? to : userId;
     
-    res.status(201).send({ id: result.insertId, sellerId, buyerId, readBySeller: isSeller, readByBuyer: !isSeller });
-  } catch (err) {
-    console.error("Error creating conversation:", err);
-    next(createError(500, "Server error while creating conversation"));
-  }
+    try {
+        const result = await ConversationModel.insertConversation(sellerId, buyerId, isSeller);
+        res.status(201).send({ id: result.insertId, sellerId, buyerId, readBySeller: isSeller, readByBuyer: !isSeller });
+    } catch (err) {
+        console.error("Error creating conversation:", err);
+        next(createError(500, "Server error while creating conversation"));
+    }
 };
 
-export const updateConversation = async (req, res, next) => {
+export const updateConversationIsRead = async (req, res, next) => {
   const { id } = req.params;
   const readBySeller = req.isSeller;
-  const readByBuyer = !req.isSeller;
-
-  const sql = `
-    UPDATE Conversations
-    SET readBySeller = ?, readByBuyer = ?
-    WHERE ConversationID = ?
-  `;
-
+  
   try {
-    const [result] = await db.execute(sql, [readBySeller, readByBuyer, id]);
-    if (result.affectedRows === 0) {
-      return next(createError(404, "Conversation not found"));
-    }
-    res.status(200).send({ message: 'Conversation updated successfully' });
+      const result = await ConversationModel.updateConversationIsReadStatus(id, readBySeller);
+      if (result.affectedRows === 0) {
+          return next(createError(404, "Conversation not found"));
+      }
+      res.status(200).send({ message: 'Conversation updated successfully' });
   } catch (err) {
-    console.error("Error updating conversation:", err);
-    next(createError(500, "Server error while updating conversation"));
+      console.error("Error updating conversation:", err);
+      next(createError(500, "Server error while updating conversation"));
   }
 };
 
+
+export const updateConversationLastMessage = async (req, res, next) => {
+    const { id } = req.params;
+    let { lastMessage } = req.body; 
+    if (/\.(jpg|jpeg|png|gif)$/i.test(lastMessage.toLowerCase())) {
+      lastMessage = '[photo]';
+    }
+    
+    try {
+        const result = await ConversationModel.updateConversationLastMessageStatus(id, lastMessage);
+        if (result.affectedRows === 0) {
+            return next(createError(404, "Conversation not found"));
+        }
+        res.status(200).send({ message: 'Conversation updated successfully' });
+    } catch (err) {
+        console.error("Error updating conversation:", err);
+        next(createError(500, "Server error while updating conversation"));
+    }
+  };
+  
+
 export const getSingleConversation = async (req, res, next) => {
-  const { id } = req.params;
-
-  const sql = `SELECT * FROM Conversations WHERE ConversationID = ?`;
-
-  try {
-    const [rows] = await db.query(sql, [id]);
-    if (rows.length === 0) return next(createError(404, "Conversation not found"));
-    res.status(200).send(rows[0]);
-  } catch (err) {
-    console.error("Error retrieving conversation:", err);
-    next(createError(500, "Server error while retrieving conversation"));
-  }
+    const { id } = req.params;
+    
+    try {
+        const conversation = await ConversationModel.findConversationById(id);
+        if (!conversation) {
+            return next(createError(404, "Conversation not found"));
+        }
+        res.status(200).send(conversation);
+    } catch (err) {
+        console.error("Error retrieving conversation:", err);
+        next(createError(500, "Server error while retrieving conversation"));
+    }
 };
 
 export const getConversations = async (req, res, next) => {
-  const userId = req.userId;
-  const userColumn = req.isSeller ? 'sellerId' : 'buyerId';
-
-  const sql = `SELECT * FROM Conversations WHERE ${userColumn} = ? ORDER BY updatedAt DESC`;
-
-  try {
-    const [rows] = await db.query(sql, [userId]);
-    res.status(200).send(rows);
-  } catch (err) {
-    console.error("Error retrieving conversations:", err);
-    next(createError(500, "Server error while retrieving conversations"));
-  }
+    const userId = req.userId;
+    const userColumn = req.isSeller ? 'sellerId' : 'buyerId';
+    
+    try {
+        const rows = await ConversationModel.findAllConversationsByUser(userId, userColumn);
+        res.status(200).send(rows);
+    } catch (err) {
+        console.error("Error retrieving conversations:", err);
+        next(createError(500, "Server error while retrieving conversations"));
+    }
 };

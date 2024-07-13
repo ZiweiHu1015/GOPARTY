@@ -1,9 +1,7 @@
 const getCurrentUser = () => {
+  const currentUserData = JSON.parse(localStorage.getItem("currentUser"));
 
-  const userString = localStorage.getItem("currentUser");
-
-  //console.log(userString);
-  return JSON.parse(localStorage.getItem("currentUser"));
+  return currentUserData;
 };
 
 export default getCurrentUser
