@@ -13,7 +13,8 @@ function MyGigs() {
     queryKey: ["myGigs"],
     queryFn: async () => {
       try {
-        const response = await newRequest.get(`/listings?userId=${currentUser.user.UserID}`);
+        const response = await newRequest.get(`/listing?sellerId=${currentUser.user.UserID}`);
+        console.log(response.data);
         return response.data;
       } catch (error) {
         throw new Error("Failed to fetch data");
@@ -39,7 +40,7 @@ function MyGigs() {
     <div className="myGigs">
     <div className="container">
       <div className="title">
-        <h1>Gigs</h1>
+        <h1>MyGigs</h1>
         {currentUser.isSeller && (
           <Link to="/add">
             <button>Add New Gig</button>
