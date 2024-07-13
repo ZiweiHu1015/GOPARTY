@@ -60,29 +60,7 @@ export const createListing = async (listingData) => {
     }
 };
 
-// export const getListingById = async (listingId) => {
-//     const sql = ` SELECT 
-//             l.*, 
-//             u.FirstName, 
-//             u.ProfilePicture,
-//             YEAR(u.CreatedAt) AS MemberSince,
-//             s.StoreName,
-//             s.StoreDescription,
-//             s.MainService,
-//             s.ServiceDays,
-//             s.ServiceArea,
-//             s.ServiceType
-//         FROM 
-//             Listings l
-//         JOIN 
-//             Users u ON l.SellerID = u.UserID
-//         JOIN 
-//             Sellers s ON l.SellerID = s.UserID
-//         WHERE 
-//             l.ProductID = ?`;
-//     const [rows] = await db.query(sql, [listingId]);
-//     return rows[0];
-// };
+
 export const getListingById = async (listingId) => {
     // Query to fetch listing details
     const sql = `
@@ -110,7 +88,7 @@ export const getListingById = async (listingId) => {
     const optionsSql = `SELECT Name, Price FROM Options WHERE ListingID = ?`;
 
     try {
-        console.log("Executing listing query with ProductID:", listingId);
+        // console.log("Executing listing query with ProductID:", listingId);
         // Fetch listing details
         const [listingRows] = await db.query(sql, [listingId]);
         console.log("Listing query result:", listingRows);

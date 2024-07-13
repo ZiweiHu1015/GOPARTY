@@ -13,7 +13,7 @@ function MyGigs() {
     queryKey: ["myGigs"],
     queryFn: async () => {
       try {
-        const response = await newRequest.get(`/listings?userId=${currentUser._id}`);
+        const response = await newRequest.get(`/listings?userId=${currentUser.user.UserID}`);
         return response.data;
       } catch (error) {
         throw new Error("Failed to fetch data");
