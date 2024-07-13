@@ -25,7 +25,7 @@ function MyGigs() {
 
   const mutation = useMutation({
     mutationFn: (id) => {
-      return newRequest.delete(`/listings/${id}`);
+      return newRequest.delete(`/listing/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);
@@ -66,9 +66,7 @@ function MyGigs() {
             {data && data.length > 0 ? (
               data.map((gig) => (
                 <tr key={gig.ProductID}>
-                  <td>
-                    <img className="image" src={gig.CoverImage} alt="" />
-                  </td>
+                  <td><img className="image" src={gig.CoverImage} alt="" /></td>
                   <td>{gig.Title}</td>
                   <td>{gig.Price}</td>
                   <td>{gig.sales}</td>
@@ -77,7 +75,7 @@ function MyGigs() {
                       className="delete"
                       src="./img/delete.png"
                       alt=""
-                      onClick={() => handleDelete(gig._id)}
+                      onClick={() => handleDelete(gig.ProductID)}
                     />
                   </td>
                 </tr>
