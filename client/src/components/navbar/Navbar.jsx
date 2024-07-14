@@ -21,6 +21,7 @@ function Navbar() {
   }, []);
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  // console.log("currentUser", currentUser);
 
   const navigate = useNavigate();
 
@@ -48,20 +49,19 @@ function Navbar() {
           </Link>
         </div>
         <div className="links">
-          {!currentUser?.isSeller}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
-              <img src={currentUser.img || "/img/userProfile.jpg"} alt="" />
-              <span>{currentUser?.username}</span>
+              <img src={currentUser.user.ProfilePicture || "/img/userProfile.jpg"} alt="" />
+              <span>{currentUser?.user.Username}</span>
               {open && (
                 <div className="options">
-                  {currentUser.isSeller && (
+                  {currentUser.user.isSeller && (
                     <>
                       <Link className="link" to="/mygigs">
                         Gigs
                       </Link>
                       <Link className="link" to="/add">
-                        Add New Gig
+                        Add New Listing
                       </Link>
                     </>
                   )}

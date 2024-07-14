@@ -1,5 +1,5 @@
 USE goPartyDatabase;
 
-SELECT * FROM Users WHERE UserID = 95;
+-- SELECT * FROM Users WHERE UserID = 95;
 
--- select * from Users;
+select * from Users;

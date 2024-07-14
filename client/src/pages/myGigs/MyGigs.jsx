@@ -43,7 +43,7 @@ function MyGigs() {
         <h1>MyGigs</h1>
         {currentUser.isSeller && (
           <Link to="/add">
-            <button>Add New Gig</button>
+            <button>Add New Listing</button>
           </Link>
         )}
       </div>
