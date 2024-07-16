@@ -21,7 +21,6 @@ function Navbar() {
   }, []);
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  // console.log("currentUser", currentUser);
 
   const navigate = useNavigate();
 
@@ -78,30 +77,27 @@ function Navbar() {
               )}
             </div>
           ) : (
-            <>
               <Link to="/login" className="link">
                 <button>Sign in</button>
               </Link>
-             {/* <Link className="link" to="/register">
-                <button>Register</button>
-              </Link>
-          */ }
-            </>
           )}
         </div>
       </div>
       {(active || pathname !== "/") && (
-       <>
-          <hr />
+        <>
+          <hr/>
           <div className="menu">
             <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=balloon")}>
               Balloon Art
             </span>
-            <span className="link menuLink" onClick={() => handleNavigation("/gilistingsgs?cat=floral")}>
+            <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=floral")}>
               Floral
-           </span>
+            </span>
             <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=cake")}>
               Cake
+            </span>
+            <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=photo")}>
+              Photo
             </span>
             <span className="link menuLink" onClick={() => handleNavigation("/listings?cat=package")}>
               Packages
@@ -110,7 +106,7 @@ function Navbar() {
               Grab and Go
             </span>
           </div>
-          <hr />
+          <hr/>
         </>
       )}
     </div>

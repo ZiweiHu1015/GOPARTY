@@ -16,9 +16,6 @@ function CatCard({ card }) {
         <span className="title">{card.title}</span>
       </div>
     </Link>
-
-
-    
   );
 }
 export default CatCard;

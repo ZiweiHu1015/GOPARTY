@@ -23,9 +23,9 @@ export const cards = [ //ads section
     {
       id: 4,
       title: "Photograph",
-      desc: "Customize your dessert table",
-      cat: "cake",
-      img: "../img/cake.jpg",
+      desc: "Photooooooo",
+      cat: "photo",
+      img: "",
     },
     {
       id: 5,
