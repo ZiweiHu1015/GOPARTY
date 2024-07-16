@@ -80,7 +80,6 @@ import {
       next(createError(500, "Server error while retrieving listings"));
     }
   };
-  
 
   export const updateListing = async (req, res, next) => {
     const { id } = req.params;

@@ -61,7 +61,7 @@ const Add = () => {
 
   const mutation = useMutation({
     mutationFn: (gig) => {
-      return newRequest.post("/listings", gig);
+      return newRequest.post("/listing", gig);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);
@@ -70,6 +70,8 @@ const Add = () => {
     onError: (error) => {
       console.error('Error creating gig:', error);
       // Handle error appropriately, maybe set an error state and display message
+      setSubmitError('Failed to create gig. Please try again.');
+      errorMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     },
   });
   const handleSubmit = (e) => {
@@ -91,7 +93,6 @@ const Add = () => {
       <div className="container">
         <h1>Add New Listing</h1>
         {submitError && <p ref={errorMessageRef} className="error-message">{submitError}</p>}
-         {/*generate error message, page scroll to this location when error is generated */}
         <div className="sections">
           <div className="info">
             <label htmlFor="">Title</label>

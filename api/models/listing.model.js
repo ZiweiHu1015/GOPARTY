@@ -34,7 +34,6 @@ export const createListing = async (listingData) => {
         deliveryType ,
         personalizationOptions || null,
         images ? JSON.stringify(images) : null,
-       // JSON.stringify(options),
         unavailableDates ? JSON.stringify(unavailableDates) : '[]'
     ];
 

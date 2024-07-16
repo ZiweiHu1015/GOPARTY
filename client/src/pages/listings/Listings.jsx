@@ -23,12 +23,8 @@ const Listings = () => {
       if (sort) params.set('sort', sort);
       return `?${params.toString()}`;
     };
-
     const queryString = constructQueryString();
-
-    // Construct the query for the API based on current filters
-    //const queryString = `${search}&min=${minRef.current?.value}&max=${maxRef.current?.value}&sort=${sort}`;
-
+    
     const { isLoading, error, data, refetch } = useQuery({
       queryKey: ["listings"],
       queryFn: () => {
